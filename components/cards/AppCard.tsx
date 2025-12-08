@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     width: 140,
     height: 80,
     borderRadius: 12,
-    backgroundColor: '#222',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 6,
@@ -117,8 +116,8 @@ const styles = StyleSheet.create({
     transform: [{ scale: FOCUS_SCALE }],
   },
   logo: {
-    width: 120,
-    height: 70,
+    width: 140,
+    height: 80,
     borderRadius: 12,
   },
   name: {

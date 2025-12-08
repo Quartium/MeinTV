@@ -37,7 +37,6 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
         val pkg = appInfo.packageName
         val label = pm.getApplicationLabel(appInfo).toString()
 
-        // only include executable apps (have a launch intent)
         val launchIntent = try {
           pm.getLeanbackLaunchIntentForPackage(pkg) ?: pm.getLaunchIntentForPackage(pkg)
         } catch (_: Exception) {
@@ -49,40 +48,10 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
         map.putString("packageName", pkg)
         map.putString("label", label)
 
-        // icon
-        try {
-          val iconDrawable = pm.getApplicationIcon(appInfo)
+        var iconSet = false
 
-          val bmp: Bitmap? = when (iconDrawable) {
-            is BitmapDrawable -> iconDrawable.bitmap
-            else -> {
-              val w = iconDrawable.intrinsicWidth
-              val h = iconDrawable.intrinsicHeight
-              if (w > 0 && h > 0) {
-                val outBmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-                val canvas = Canvas(outBmp)
-                iconDrawable.setBounds(0, 0, canvas.width, canvas.height)
-                iconDrawable.draw(canvas)
-                outBmp
-              } else null
-            }
-          }
-
-          bmp?.let {
-            val stream = ByteArrayOutputStream()
-            it.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val bytes = stream.toByteArray()
-            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-            map.putString("icon", "data:image/png;base64,$base64")
-          }
-        } catch (_: Exception) {
-          // ignore icon errors, app will still appear with label only
-        }
-
-        // banner
         try {
           val bannerResId = appInfo.banner ?: 0
-
           if (bannerResId != 0) {
             val res = pm.getResourcesForApplication(appInfo)
             val bannerDrawable = res.getDrawable(bannerResId, null)
@@ -107,11 +76,42 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
               bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
               val bytes = stream.toByteArray()
               val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-              map.putString("banner", "data:image/png;base64,$base64")
+              // Use banner as the icon image
+              map.putString("icon", "data:image/png;base64,$base64")
+              iconSet = true
             }
           }
         } catch (_: Exception) {
-          // ignore banner errors
+        }
+
+        if (!iconSet) {
+          try {
+            val iconDrawable = pm.getApplicationIcon(appInfo)
+
+            val bmp: Bitmap? = when (iconDrawable) {
+              is BitmapDrawable -> iconDrawable.bitmap
+              else -> {
+                val w = iconDrawable.intrinsicWidth
+                val h = iconDrawable.intrinsicHeight
+                if (w > 0 && h > 0) {
+                  val outBmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+                  val canvas = Canvas(outBmp)
+                  iconDrawable.setBounds(0, 0, canvas.width, canvas.height)
+                  iconDrawable.draw(canvas)
+                  outBmp
+                } else null
+              }
+            }
+
+            bmp?.let {
+              val stream = ByteArrayOutputStream()
+              it.compress(Bitmap.CompressFormat.PNG, 100, stream)
+              val bytes = stream.toByteArray()
+              val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+              map.putString("icon", "data:image/png;base64,$base64")
+            }
+          } catch (_: Exception) {
+          }
         }
 
         result.pushMap(map)
@@ -122,6 +122,7 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
       promise.reject("APPS_ERROR", e)
     }
   }
+
 
   @ReactMethod
   fun launchApp(packageName: String, promise: Promise) {

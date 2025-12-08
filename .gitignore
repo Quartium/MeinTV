@@ -66,6 +66,10 @@ yarn-error.log
 # testing
 /coverage
 
+# Environment
+.env
+android/.env
+
 # Yarn
 .yarn/*
 !.yarn/patches

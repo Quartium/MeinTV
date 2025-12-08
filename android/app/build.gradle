@@ -2,6 +2,36 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+def envProps = new Properties()
+def envFile = [rootProject.file(".env"), rootProject.file("android/.env")].find { it.exists() }
+if (envFile != null) {
+    envFile.withInputStream { envProps.load(it) }
+}
+
+def readEnv = { key ->
+    def fromSystem = System.getenv(key)
+    if (fromSystem != null && !fromSystem.trim().isEmpty()) {
+        return fromSystem.trim()
+    }
+    def fromFile = envProps.getProperty(key)
+    return fromFile != null ? fromFile.trim() : ""
+}
+
+def escapeForBuildConfig = { value ->
+    value.replace("\\", "\\\\").replace("\"", "\\\"")
+}
+
+def traktClientId = readEnv("TRAKT_CLIENT_ID")
+def traktClientSecret = readEnv("TRAKT_CLIENT_SECRET")
+
+if (!traktClientId) {
+    throw new GradleException("TRAKT_CLIENT_ID is not set. Add it to a .env file or export it in your shell.")
+}
+
+if (!traktClientSecret) {
+    throw new GradleException("TRAKT_CLIENT_SECRET is not set. Add it to a .env file or export it in your shell.")
+}
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -77,13 +107,15 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.tvhub"
+    namespace "com.meintv"
     defaultConfig {
-        applicationId "com.tvhub"
+        applicationId "com.meintv"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "TRAKT_CLIENT_ID", "\"${escapeForBuildConfig(traktClientId)}\""
+        buildConfigField "String", "TRAKT_CLIENT_SECRET", "\"${escapeForBuildConfig(traktClientSecret)}\""
     }
     signingConfigs {
         debug {
@@ -110,6 +142,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

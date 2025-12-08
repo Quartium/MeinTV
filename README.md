@@ -4,6 +4,22 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
+## Environment variables
+
+Add your Trakt credentials to both the Metro build and the Android native build:
+
+- `.env` at the project root (read by Metro/Babel)
+- `android/.env` (read by the Gradle build)
+
+Each file should contain:
+
+```env
+TRAKT_CLIENT_ID=your_trakt_client_id
+TRAKT_CLIENT_SECRET=your_trakt_client_secret
+```
+
+You can also export these variables in your shell if you prefer not to use files. Both Android and JavaScript builds will fail if the values are missing.
+
 ## Step 1: Start Metro
 
 First, you will need to run **Metro**, the JavaScript build tool for React Native.

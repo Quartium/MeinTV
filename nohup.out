@@ -1,0 +1,584 @@
+INFO         | Android emulator version 35.4.9.0 (build_id 13025442) (CL:N/A)
+INFO         | Graphics backend: gfxstream
+INFO         | Found systemPath /home/firas/Android/Sdk/system-images/android-33/android-tv/x86/
+INFO         | Found systemPath /home/firas/Android/Sdk/system-images/android-33/android-tv/x86/
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `Television_1080p` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `Television_1080p` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `Television_1080p` are met
+INFO         | Warning: Could not find the Qt platform plugin "wayland" in "/home/firas/Android/Sdk/emulator/lib64/qt/plugins" (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_btn_xr_environment_living_room_day_clicked() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_btn_xr_environment_living_room_night_clicked() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_posture_requested(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_posture_selection_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_resizable_requested(PresetEmulatorSizeType) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_resizable_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_xr_environment_mode_changed(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_xr_environment_mode_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_xr_input_mode_changed(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_xr_input_mode_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_sleep_timer_done() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_unfold_timer_done() (:0, )
+INFO         | Storing crashdata in: /tmp/android-firas/emu-crash-35.4.9.db, detection is enabled for process: 21375
+INFO         | Guest Driver: Auto (ext controls)
+WARNING      | Your GPU drivers may have a bug. Switching to software rendering.
+library_mode swangle_indirect gpu mode swangle_indirect
+INFO         | Initializing hardware OpenGLES emulation support
+I1130 14:11:33.711686   21375 opengles.cpp:285] android_startOpenglesRenderer: gpu info
+I1130 14:11:33.711712   21375 opengles.cpp:286] 
+INFO         | Not raising nofile soft limit from 1048576.
+INFO         | HealthMonitor disabled.
+INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+INFO         | Setting ICD filenames for the loader = /home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/vk_swiftshader_icd.json:/home/firas/Android/Sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] failed (posix). dlerror: []
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] failed (posix). dlerror: []
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]
+
+INFO         | Added library: /home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so
+INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+INFO         | Supports id properties, got a vulkan device UUID
+INFO         | SharedLibrary::open for [libGLESv2.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libGLESv2.so] (posix): begin
+
+INFO         | SharedLibrary::open for [libGLESv2.so] (posix,linux): call dlopen on [libGLESv2.so]
+
+INFO         | SharedLibrary::open for [libEGL.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libEGL.so] (posix): begin
+
+INFO         | SharedLibrary::open for [libEGL.so] (posix,linux): call dlopen on [libEGL.so]
+
+INFO         | SharedLibrary::open for [libX11]
+
+INFO         | SharedLibrary::open for [libX11]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libX11] (posix): begin
+
+INFO         | SharedLibrary::open for [libX11] (posix,linux): call dlopen on [libX11.so]
+
+INFO         | Initializing VkEmulation features:
+INFO         |     glInteropSupported: false
+INFO         |     useDeferredCommands: true
+INFO         |     createResourceWithRequirements: true
+INFO         |     useVulkanComposition: false
+INFO         |     useVulkanNativeSwapchain: false
+INFO         |     enable guestRenderDoc: false
+INFO         |     ASTC LDR emulation mode: 2
+INFO         |     enable ETC2 emulation: true
+INFO         |     enable Ycbcr emulation: false
+INFO         |     guestVulkanOnly: false
+INFO         |     useDedicatedAllocations: false
+INFO         | Graphics Adapter Vendor Google (Google Inc.)
+INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+INFO         | Graphics Device Extensions N/A
+INFO         | Sending adb public key [QAAAAFfpxMGZ7S2HNS69iJ2VB0EVxOSD710J7t5OfWueRPnOLcwonNtI+F7b+VBqE1TpJly8+SI0SzhKB1q3faouQltTcE2dy7zHUmNpAkUvqurR8xRgk68EUmmm71s/MVMn1JxUlXyMW9YNubEDN0vy4j4dk3odhQKkujg8sKcA1T3Xu9PdFItUNOa71rhwDUdNYsg2Ir08xTq3QSnRvpm//xCcyERm5A7J8nT9NKH/eehuToXRjRj3QeLxSZ5h1mNYsMO4zOLrhP8ULjc1nAL2zdzAcSjtJFKmhLj+OPUrZ+g8W1EUj8Am4RXJNkT4bg4IybxQR0xQBn57xwDP60300C6wgz2rE4WFahoN4Klb7u+h9cWJRImzxHrByRn/NToPc0g6CvG1m7OdVWihfiA2CuguR9pgaB+oDmbJ1+6qavhIj6h3N7XXPJOCYDsN27m8GKRlyLCTEhT+ffCn0LxKqc0osxsIpVpSO+O6nSNFxZ0enh9ZtNrw/ZIT3INTHYib718uaaZ6HixOVvYt/6ZbkObf9qd/awvL5xMLwcOVipvAmG3MSmYEbw72ISfLLoL+ZKmFomf53UIwWk8+Y2byzFRDRHC63mkA7ERoHlYYw0AYGR8xgqOBs2sl7WN7E6pGKGnJNUZKyHbqmMdHMQtaQ4H5+Dt/0xCXEzu6NVrOf4lpj54pmwEAAQA= firas@unknown]
+INFO         | Userspace boot properties:
+INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+INFO         |   androidboot.dalvik.vm.heapsize=512m
+INFO         |   androidboot.debug.hwui.renderer=skiagl
+INFO         |   androidboot.hardware=ranchu
+INFO         |   androidboot.hardware.gltransport=pipe
+INFO         |   androidboot.hardware.vulkan=ranchu
+INFO         |   androidboot.logcat=*:V
+INFO         |   androidboot.opengles.version=196608
+INFO         |   androidboot.qemu=1
+INFO         |   androidboot.qemu.adb.pubkey=QAAAAFfpxMGZ7S2HNS69iJ2VB0EVxOSD710J7t5OfWueRPnOLcwonNtI+F7b+VBqE1TpJly8+SI0SzhKB1q3faouQltTcE2dy7zHUmNpAkUvqurR8xRgk68EUmmm71s/MVMn1JxUlXyMW9YNubEDN0vy4j4dk3odhQKkujg8sKcA1T3Xu9PdFItUNOa71rhwDUdNYsg2Ir08xTq3QSnRvpm//xCcyERm5A7J8nT9NKH/eehuToXRjRj3QeLxSZ5h1mNYsMO4zOLrhP8ULjc1nAL2zdzAcSjtJFKmhLj+OPUrZ+g8W1EUj8Am4RXJNkT4bg4IybxQR0xQBn57xwDP60300C6wgz2rE4WFahoN4Klb7u+h9cWJRImzxHrByRn/NToPc0g6CvG1m7OdVWihfiA2CuguR9pgaB+oDmbJ1+6qavhIj6h3N7XXPJOCYDsN27m8GKRlyLCTEhT+ffCn0LxKqc0osxsIpVpSO+O6nSNFxZ0enh9ZtNrw/ZIT3INTHYib718uaaZ6HixOVvYt/6ZbkObf9qd/awvL5xMLwcOVipvAmG3MSmYEbw72ISfLLoL+ZKmFomf53UIwWk8+Y2byzFRDRHC63mkA7ERoHlYYw0AYGR8xgqOBs2sl7WN7E6pGKGnJNUZKyHbqmMdHMQtaQ4H5+Dt/0xCXEzu6NVrOf4lpj54pmwEAAQA= firas@unknown
+INFO         |   androidboot.qemu.avd_name=Television_1080p
+INFO         |   androidboot.qemu.camera_hq_edge_processing=0
+INFO         |   androidboot.qemu.camera_protocol_ver=1
+INFO         |   androidboot.qemu.cpuvulkan.version=4202496
+INFO         |   androidboot.qemu.gltransport.drawFlushInterval=800
+INFO         |   androidboot.qemu.gltransport.name=pipe
+INFO         |   androidboot.qemu.hwcodec.avcdec=2
+INFO         |   androidboot.qemu.hwcodec.hevcdec=2
+INFO         |   androidboot.qemu.hwcodec.vpxdec=2
+INFO         |   androidboot.qemu.settings.system.screen_off_timeout=2147483647
+INFO         |   androidboot.qemu.virtiowifi=1
+INFO         |   androidboot.qemu.vsync=60
+INFO         |   androidboot.serialno=EMULATOR35X4X9X0
+INFO         |   androidboot.vbmeta.digest=0f3123304c1241492dffd1a9219ccb3eabcb4139d6960fc5c3f7c1cbbd42368a
+INFO         |   androidboot.vbmeta.hash_alg=sha256
+INFO         |   androidboot.vbmeta.size=6144
+INFO         |   androidboot.veritymode=enforcing
+WARNING: cannnot unmap ptr 0x76ff3c001000 as it is in the protected range from 0x76febc000000 to 0x76ff3c200000
+INFO         | Monitoring duration of emulator setup.
+WARNING      | The emulator now requires a signed jwt token for gRPC access! Use the -grpc flag if you really want an open unprotected grpc port
+INFO         | Using security allow list from: /home/firas/Android/Sdk/emulator/lib/emulator_access.json
+WARNING      | *** Basic token auth should only be used by android-studio ***
+INFO         | The active JSON Web Key Sets can be found here: /run/user/1000/avd/running/21375/jwks/95788b69-3eaa-4d35-a74a-c01223c797b4/active.jwk
+INFO         | Scanning /run/user/1000/avd/running/21375/jwks/95788b69-3eaa-4d35-a74a-c01223c797b4 for jwk keys.
+INFO         | Started GRPC server at 127.0.0.1:8554, security: Local, auth: +token
+INFO         | Advertising in: /run/user/1000/avd/running/pid_21375.ini
+INFO         | Setting display: 0 configuration to: 1920x1080, dpi: 320x320 
+INFO         | setDisplayActiveConfig 0
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `Television_1080p` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `Television_1080p` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `Television_1080p` are met
+INFO         | Loading snapshot 'default_boot'...
+WARNING      | Device 'cache' does not have the requested snapshot 'default_boot'
+
+WARNING      | Failed to load snapshot 'default_boot'
+INFO         | Activated packet streamer for bluetooth emulation
+INFO         | Boot completed in 55582 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_rgbcSensorValueWidget_valueChanged() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_posture_valueChanged(int) (:0, )
+INFO         | AVD supportsNativeGLES=1, supportsGuestAngle=0
+INFO         | Platform does not support Guest Angle
+INFO         | Info: Sandboxing disabled by user. (:0, )
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+ERROR        | Failed to find ColorBuffer:592
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+INFO         | Wait for emulator (pid 21375) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+
+INFO         | Android emulator version 35.4.9.0 (build_id 13025442) (CL:N/A)
+INFO         | Graphics backend: gfxstream
+INFO         | Found systemPath /home/firas/Android/Sdk/system-images/android-33/android-tv/x86/
+INFO         | Found systemPath /home/firas/Android/Sdk/system-images/android-33/android-tv/x86/
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `Television_1080p` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `Television_1080p` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `Television_1080p` are met
+INFO         | Warning: Could not find the Qt platform plugin "wayland" in "/home/firas/Android/Sdk/emulator/lib64/qt/plugins" (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_btn_xr_environment_living_room_day_clicked() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_btn_xr_environment_living_room_night_clicked() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_posture_requested(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_posture_selection_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_resizable_requested(PresetEmulatorSizeType) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_resizable_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_xr_environment_mode_changed(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_xr_environment_mode_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_xr_input_mode_changed(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_xr_input_mode_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_sleep_timer_done() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_unfold_timer_done() (:0, )
+INFO         | Storing crashdata in: /tmp/android-firas/emu-crash-35.4.9.db, detection is enabled for process: 8884
+INFO         | Guest Driver: Auto (ext controls)
+WARNING      | Your GPU drivers may have a bug. Switching to software rendering.
+library_mode swangle_indirect gpu mode swangle_indirect
+INFO         | Initializing hardware OpenGLES emulation support
+I1202 23:00:12.278669    8884 opengles.cpp:285] android_startOpenglesRenderer: gpu info
+I1202 23:00:12.303261    8884 opengles.cpp:286] 
+INFO         | Not raising nofile soft limit from 1048576.
+INFO         | HealthMonitor disabled.
+INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+INFO         | Setting ICD filenames for the loader = /home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/vk_swiftshader_icd.json:/home/firas/Android/Sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] failed (posix). dlerror: []
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] failed (posix). dlerror: []
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]
+
+INFO         | Added library: /home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so
+INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+INFO         | Supports id properties, got a vulkan device UUID
+INFO         | SharedLibrary::open for [libGLESv2.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libGLESv2.so] (posix): begin
+
+INFO         | SharedLibrary::open for [libGLESv2.so] (posix,linux): call dlopen on [libGLESv2.so]
+
+INFO         | SharedLibrary::open for [libEGL.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libEGL.so] (posix): begin
+
+INFO         | SharedLibrary::open for [libEGL.so] (posix,linux): call dlopen on [libEGL.so]
+
+INFO         | SharedLibrary::open for [libX11]
+
+INFO         | SharedLibrary::open for [libX11]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libX11] (posix): begin
+
+INFO         | SharedLibrary::open for [libX11] (posix,linux): call dlopen on [libX11.so]
+
+INFO         | Initializing VkEmulation features:
+INFO         |     glInteropSupported: false
+INFO         |     useDeferredCommands: true
+INFO         |     createResourceWithRequirements: true
+INFO         |     useVulkanComposition: false
+INFO         |     useVulkanNativeSwapchain: false
+INFO         |     enable guestRenderDoc: false
+INFO         |     ASTC LDR emulation mode: 2
+INFO         |     enable ETC2 emulation: true
+INFO         |     enable Ycbcr emulation: false
+INFO         |     guestVulkanOnly: false
+INFO         |     useDedicatedAllocations: false
+INFO         | Graphics Adapter Vendor Google (Google Inc.)
+INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+INFO         | Graphics Device Extensions N/A
+INFO         | Sending adb public key [QAAAAFfpxMGZ7S2HNS69iJ2VB0EVxOSD710J7t5OfWueRPnOLcwonNtI+F7b+VBqE1TpJly8+SI0SzhKB1q3faouQltTcE2dy7zHUmNpAkUvqurR8xRgk68EUmmm71s/MVMn1JxUlXyMW9YNubEDN0vy4j4dk3odhQKkujg8sKcA1T3Xu9PdFItUNOa71rhwDUdNYsg2Ir08xTq3QSnRvpm//xCcyERm5A7J8nT9NKH/eehuToXRjRj3QeLxSZ5h1mNYsMO4zOLrhP8ULjc1nAL2zdzAcSjtJFKmhLj+OPUrZ+g8W1EUj8Am4RXJNkT4bg4IybxQR0xQBn57xwDP60300C6wgz2rE4WFahoN4Klb7u+h9cWJRImzxHrByRn/NToPc0g6CvG1m7OdVWihfiA2CuguR9pgaB+oDmbJ1+6qavhIj6h3N7XXPJOCYDsN27m8GKRlyLCTEhT+ffCn0LxKqc0osxsIpVpSO+O6nSNFxZ0enh9ZtNrw/ZIT3INTHYib718uaaZ6HixOVvYt/6ZbkObf9qd/awvL5xMLwcOVipvAmG3MSmYEbw72ISfLLoL+ZKmFomf53UIwWk8+Y2byzFRDRHC63mkA7ERoHlYYw0AYGR8xgqOBs2sl7WN7E6pGKGnJNUZKyHbqmMdHMQtaQ4H5+Dt/0xCXEzu6NVrOf4lpj54pmwEAAQA= firas@unknown]
+INFO         | Userspace boot properties:
+INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+INFO         |   androidboot.dalvik.vm.heapsize=512m
+INFO         |   androidboot.debug.hwui.renderer=skiagl
+INFO         |   androidboot.hardware=ranchu
+INFO         |   androidboot.hardware.gltransport=pipe
+INFO         |   androidboot.hardware.vulkan=ranchu
+INFO         |   androidboot.logcat=*:V
+INFO         |   androidboot.opengles.version=196608
+INFO         |   androidboot.qemu=1
+INFO         |   androidboot.qemu.adb.pubkey=QAAAAFfpxMGZ7S2HNS69iJ2VB0EVxOSD710J7t5OfWueRPnOLcwonNtI+F7b+VBqE1TpJly8+SI0SzhKB1q3faouQltTcE2dy7zHUmNpAkUvqurR8xRgk68EUmmm71s/MVMn1JxUlXyMW9YNubEDN0vy4j4dk3odhQKkujg8sKcA1T3Xu9PdFItUNOa71rhwDUdNYsg2Ir08xTq3QSnRvpm//xCcyERm5A7J8nT9NKH/eehuToXRjRj3QeLxSZ5h1mNYsMO4zOLrhP8ULjc1nAL2zdzAcSjtJFKmhLj+OPUrZ+g8W1EUj8Am4RXJNkT4bg4IybxQR0xQBn57xwDP60300C6wgz2rE4WFahoN4Klb7u+h9cWJRImzxHrByRn/NToPc0g6CvG1m7OdVWihfiA2CuguR9pgaB+oDmbJ1+6qavhIj6h3N7XXPJOCYDsN27m8GKRlyLCTEhT+ffCn0LxKqc0osxsIpVpSO+O6nSNFxZ0enh9ZtNrw/ZIT3INTHYib718uaaZ6HixOVvYt/6ZbkObf9qd/awvL5xMLwcOVipvAmG3MSmYEbw72ISfLLoL+ZKmFomf53UIwWk8+Y2byzFRDRHC63mkA7ERoHlYYw0AYGR8xgqOBs2sl7WN7E6pGKGnJNUZKyHbqmMdHMQtaQ4H5+Dt/0xCXEzu6NVrOf4lpj54pmwEAAQA= firas@unknown
+INFO         |   androidboot.qemu.avd_name=Television_1080p
+INFO         |   androidboot.qemu.camera_hq_edge_processing=0
+INFO         |   androidboot.qemu.camera_protocol_ver=1
+INFO         |   androidboot.qemu.cpuvulkan.version=4202496
+INFO         |   androidboot.qemu.gltransport.drawFlushInterval=800
+INFO         |   androidboot.qemu.gltransport.name=pipe
+INFO         |   androidboot.qemu.hwcodec.avcdec=2
+INFO         |   androidboot.qemu.hwcodec.hevcdec=2
+INFO         |   androidboot.qemu.hwcodec.vpxdec=2
+INFO         |   androidboot.qemu.settings.system.screen_off_timeout=2147483647
+INFO         |   androidboot.qemu.virtiowifi=1
+INFO         |   androidboot.qemu.vsync=60
+INFO         |   androidboot.serialno=EMULATOR35X4X9X0
+INFO         |   androidboot.vbmeta.digest=0f3123304c1241492dffd1a9219ccb3eabcb4139d6960fc5c3f7c1cbbd42368a
+INFO         |   androidboot.vbmeta.hash_alg=sha256
+INFO         |   androidboot.vbmeta.size=6144
+INFO         |   androidboot.veritymode=enforcing
+WARNING: cannnot unmap ptr 0x749418401000 as it is in the protected range from 0x749398400000 to 0x749418600000
+INFO         | Monitoring duration of emulator setup.
+WARNING      | The emulator now requires a signed jwt token for gRPC access! Use the -grpc flag if you really want an open unprotected grpc port
+INFO         | Using security allow list from: /home/firas/Android/Sdk/emulator/lib/emulator_access.json
+WARNING      | *** Basic token auth should only be used by android-studio ***
+INFO         | The active JSON Web Key Sets can be found here: /run/user/1000/avd/running/8884/jwks/c1964cc7-dbac-40e8-be89-16009bae392a/active.jwk
+INFO         | Scanning /run/user/1000/avd/running/8884/jwks/c1964cc7-dbac-40e8-be89-16009bae392a for jwk keys.
+INFO         | Started GRPC server at 127.0.0.1:8554, security: Local, auth: +token
+INFO         | Advertising in: /run/user/1000/avd/running/pid_8884.ini
+INFO         | Setting display: 0 configuration to: 1920x1080, dpi: 320x320 
+INFO         | setDisplayActiveConfig 0
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `Television_1080p` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `Television_1080p` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `Television_1080p` are met
+INFO         | Loading snapshot 'default_boot'...
+INFO         | Activated packet streamer for bluetooth emulation
+WARNING      | Device 'cache' does not have the requested snapshot 'default_boot'
+
+WARNING      | Failed to load snapshot 'default_boot'
+INFO         | Boot completed in 166959 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_rgbcSensorValueWidget_valueChanged() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_posture_valueChanged(int) (:0, )
+INFO         | AVD supportsNativeGLES=1, supportsGuestAngle=0
+INFO         | Platform does not support Guest Angle
+INFO         | Info: Sandboxing disabled by user. (:0, )
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+INFO         | Wait for emulator (pid 8884) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+
+INFO         | Wait for emulator (pid 8884) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+
+INFO         | Android emulator version 35.4.9.0 (build_id 13025442) (CL:N/A)
+INFO         | Graphics backend: gfxstream
+INFO         | Found systemPath /home/firas/Android/Sdk/system-images/android-33/android-tv/x86/
+INFO         | Found systemPath /home/firas/Android/Sdk/system-images/android-33/android-tv/x86/
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `Television_1080p` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `Television_1080p` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `Television_1080p` are met
+INFO         | Warning: Could not find the Qt platform plugin "wayland" in "/home/firas/Android/Sdk/emulator/lib64/qt/plugins" (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_btn_xr_environment_living_room_day_clicked() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_btn_xr_environment_living_room_night_clicked() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_posture_requested(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_posture_selection_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_resizable_requested(PresetEmulatorSizeType) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_resizable_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_xr_environment_mode_changed(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_xr_environment_mode_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_xr_input_mode_changed(int) (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_xr_input_mode_dialog() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_sleep_timer_done() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_unfold_timer_done() (:0, )
+INFO         | Storing crashdata in: /tmp/android-firas/emu-crash-35.4.9.db, detection is enabled for process: 11157
+INFO         | Guest Driver: Auto (ext controls)
+WARNING      | Your GPU drivers may have a bug. Switching to software rendering.
+library_mode swangle_indirect gpu mode swangle_indirect
+INFO         | Initializing hardware OpenGLES emulation support
+I1203 20:29:24.782507   11157 opengles.cpp:285] android_startOpenglesRenderer: gpu info
+I1203 20:29:24.782547   11157 opengles.cpp:286] 
+INFO         | Not raising nofile soft limit from 1048576.
+INFO         | HealthMonitor disabled.
+INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+INFO         | Setting ICD filenames for the loader = /home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/vk_swiftshader_icd.json:/home/firas/Android/Sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so] failed (posix). dlerror: []
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1] failed (posix). dlerror: []
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so] (posix): begin
+
+INFO         | SharedLibrary::open for [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so] (posix,linux): call dlopen on [/home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so]
+
+INFO         | Added library: /home/firas/Android/Sdk/emulator/lib64/vulkan/libvulkan.so
+INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+INFO         | Supports id properties, got a vulkan device UUID
+INFO         | SharedLibrary::open for [libGLESv2.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libGLESv2.so] (posix): begin
+
+INFO         | SharedLibrary::open for [libGLESv2.so] (posix,linux): call dlopen on [libGLESv2.so]
+
+INFO         | SharedLibrary::open for [libEGL.so]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libEGL.so] (posix): begin
+
+INFO         | SharedLibrary::open for [libEGL.so] (posix,linux): call dlopen on [libEGL.so]
+
+INFO         | SharedLibrary::open for [libX11]
+
+INFO         | SharedLibrary::open for [libX11]: not found in map, open for the first time
+
+INFO         | SharedLibrary::open for [libX11] (posix): begin
+
+INFO         | SharedLibrary::open for [libX11] (posix,linux): call dlopen on [libX11.so]
+
+INFO         | Initializing VkEmulation features:
+INFO         |     glInteropSupported: false
+INFO         |     useDeferredCommands: true
+INFO         |     createResourceWithRequirements: true
+INFO         |     useVulkanComposition: false
+INFO         |     useVulkanNativeSwapchain: false
+INFO         |     enable guestRenderDoc: false
+INFO         |     ASTC LDR emulation mode: 2
+INFO         |     enable ETC2 emulation: true
+INFO         |     enable Ycbcr emulation: false
+INFO         |     guestVulkanOnly: false
+INFO         |     useDedicatedAllocations: false
+INFO         | Graphics Adapter Vendor Google (Google Inc.)
+INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+INFO         | Graphics Device Extensions N/A
+INFO         | Sending adb public key [QAAAAFfpxMGZ7S2HNS69iJ2VB0EVxOSD710J7t5OfWueRPnOLcwonNtI+F7b+VBqE1TpJly8+SI0SzhKB1q3faouQltTcE2dy7zHUmNpAkUvqurR8xRgk68EUmmm71s/MVMn1JxUlXyMW9YNubEDN0vy4j4dk3odhQKkujg8sKcA1T3Xu9PdFItUNOa71rhwDUdNYsg2Ir08xTq3QSnRvpm//xCcyERm5A7J8nT9NKH/eehuToXRjRj3QeLxSZ5h1mNYsMO4zOLrhP8ULjc1nAL2zdzAcSjtJFKmhLj+OPUrZ+g8W1EUj8Am4RXJNkT4bg4IybxQR0xQBn57xwDP60300C6wgz2rE4WFahoN4Klb7u+h9cWJRImzxHrByRn/NToPc0g6CvG1m7OdVWihfiA2CuguR9pgaB+oDmbJ1+6qavhIj6h3N7XXPJOCYDsN27m8GKRlyLCTEhT+ffCn0LxKqc0osxsIpVpSO+O6nSNFxZ0enh9ZtNrw/ZIT3INTHYib718uaaZ6HixOVvYt/6ZbkObf9qd/awvL5xMLwcOVipvAmG3MSmYEbw72ISfLLoL+ZKmFomf53UIwWk8+Y2byzFRDRHC63mkA7ERoHlYYw0AYGR8xgqOBs2sl7WN7E6pGKGnJNUZKyHbqmMdHMQtaQ4H5+Dt/0xCXEzu6NVrOf4lpj54pmwEAAQA= firas@unknown]
+INFO         | Userspace boot properties:
+INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+INFO         |   androidboot.dalvik.vm.heapsize=512m
+INFO         |   androidboot.debug.hwui.renderer=skiagl
+INFO         |   androidboot.hardware=ranchu
+INFO         |   androidboot.hardware.gltransport=pipe
+INFO         |   androidboot.hardware.vulkan=ranchu
+INFO         |   androidboot.logcat=*:V
+INFO         |   androidboot.opengles.version=196608
+INFO         |   androidboot.qemu=1
+INFO         |   androidboot.qemu.adb.pubkey=QAAAAFfpxMGZ7S2HNS69iJ2VB0EVxOSD710J7t5OfWueRPnOLcwonNtI+F7b+VBqE1TpJly8+SI0SzhKB1q3faouQltTcE2dy7zHUmNpAkUvqurR8xRgk68EUmmm71s/MVMn1JxUlXyMW9YNubEDN0vy4j4dk3odhQKkujg8sKcA1T3Xu9PdFItUNOa71rhwDUdNYsg2Ir08xTq3QSnRvpm//xCcyERm5A7J8nT9NKH/eehuToXRjRj3QeLxSZ5h1mNYsMO4zOLrhP8ULjc1nAL2zdzAcSjtJFKmhLj+OPUrZ+g8W1EUj8Am4RXJNkT4bg4IybxQR0xQBn57xwDP60300C6wgz2rE4WFahoN4Klb7u+h9cWJRImzxHrByRn/NToPc0g6CvG1m7OdVWihfiA2CuguR9pgaB+oDmbJ1+6qavhIj6h3N7XXPJOCYDsN27m8GKRlyLCTEhT+ffCn0LxKqc0osxsIpVpSO+O6nSNFxZ0enh9ZtNrw/ZIT3INTHYib718uaaZ6HixOVvYt/6ZbkObf9qd/awvL5xMLwcOVipvAmG3MSmYEbw72ISfLLoL+ZKmFomf53UIwWk8+Y2byzFRDRHC63mkA7ERoHlYYw0AYGR8xgqOBs2sl7WN7E6pGKGnJNUZKyHbqmMdHMQtaQ4H5+Dt/0xCXEzu6NVrOf4lpj54pmwEAAQA= firas@unknown
+INFO         |   androidboot.qemu.avd_name=Television_1080p
+INFO         |   androidboot.qemu.camera_hq_edge_processing=0
+INFO         |   androidboot.qemu.camera_protocol_ver=1
+INFO         |   androidboot.qemu.cpuvulkan.version=4202496
+INFO         |   androidboot.qemu.gltransport.drawFlushInterval=800
+INFO         |   androidboot.qemu.gltransport.name=pipe
+INFO         |   androidboot.qemu.hwcodec.avcdec=2
+INFO         |   androidboot.qemu.hwcodec.hevcdec=2
+INFO         |   androidboot.qemu.hwcodec.vpxdec=2
+INFO         |   androidboot.qemu.settings.system.screen_off_timeout=2147483647
+INFO         |   androidboot.qemu.virtiowifi=1
+INFO         |   androidboot.qemu.vsync=60
+INFO         |   androidboot.serialno=EMULATOR35X4X9X0
+INFO         |   androidboot.vbmeta.digest=0f3123304c1241492dffd1a9219ccb3eabcb4139d6960fc5c3f7c1cbbd42368a
+INFO         |   androidboot.vbmeta.hash_alg=sha256
+INFO         |   androidboot.vbmeta.size=6144
+INFO         |   androidboot.veritymode=enforcing
+WARNING: cannnot unmap ptr 0x721e6d601000 as it is in the protected range from 0x721ded600000 to 0x721e6d800000
+INFO         | Monitoring duration of emulator setup.
+WARNING      | The emulator now requires a signed jwt token for gRPC access! Use the -grpc flag if you really want an open unprotected grpc port
+INFO         | Using security allow list from: /home/firas/Android/Sdk/emulator/lib/emulator_access.json
+WARNING      | *** Basic token auth should only be used by android-studio ***
+INFO         | The active JSON Web Key Sets can be found here: /run/user/1000/avd/running/11157/jwks/28992f91-248c-4f95-b081-d536c274d2ce/active.jwk
+INFO         | Scanning /run/user/1000/avd/running/11157/jwks/28992f91-248c-4f95-b081-d536c274d2ce for jwk keys.
+INFO         | Started GRPC server at 127.0.0.1:8554, security: Local, auth: +token
+INFO         | Advertising in: /run/user/1000/avd/running/pid_11157.ini
+INFO         | Setting display: 0 configuration to: 1920x1080, dpi: 320x320 
+INFO         | setDisplayActiveConfig 0
+ERROR        | Unable to connect to adb daemon on port: 5037
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `Television_1080p` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `Television_1080p` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `Television_1080p` are met
+ERROR        | Unable to connect to adb daemon on port: 5037
+INFO         | Activated packet streamer for bluetooth emulation
+INFO         | Loading snapshot 'default_boot'...
+WARNING      | Device 'cache' does not have the requested snapshot 'default_boot'
+
+WARNING      | Failed to load snapshot 'default_boot'
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_rgbcSensorValueWidget_valueChanged() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_posture_valueChanged(int) (:0, )
+INFO         | AVD supportsNativeGLES=1, supportsGuestAngle=0
+INFO         | Platform does not support Guest Angle
+INFO         | Info: Sandboxing disabled by user. (:0, )
+INFO         | Boot completed in 84522 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+CANNOT TRANSLATE guest DNS ip
+INFO         | Wait for emulator (pid 11157) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+
+INFO         | Saving with gfxstream=1
+ERROR        | stop: Not implemented

@@ -57,6 +57,15 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
               const globalIndex = rowIndex * 5 + colIndex;
               const isFirstInRow = colIndex === 0;
               const isLastInRow = colIndex === row.length - 1;
+              const rowAbove = rows[rowIndex - 1];
+              const aboveItem =
+                rowAbove && rowAbove[colIndex] ? rowAbove[colIndex] : rowAbove?.[rowAbove.length - 1];
+              const aboveIndex =
+                rowAbove && rowAbove[colIndex]
+                  ? (rowIndex - 1) * 5 + colIndex
+                  : rowAbove
+                    ? (rowIndex - 1) * 5 + (rowAbove.length - 1)
+                    : null;
 
               return (
                 <AppCard
@@ -67,7 +76,8 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
                   banner={item.banner}
                   isFirst={isFirstInRow}
                   isLast={isLastInRow}
-                  nextFocusUpId={activeTabHandle}
+                  nextFocusUpId={rowIndex === 0 ? activeTabHandle : undefined}
+                  nextFocusUpFallback={rowIndex > 0 ? aboveIndex : undefined}
                   onNativeId={globalIndex === 0 ? setFirstId : undefined}
                   onLongPress={() => handleLongPress(item.packageName)}
                 />

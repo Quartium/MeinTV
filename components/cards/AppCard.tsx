@@ -22,6 +22,7 @@ type AppCardProps = {
   scrollToStart?: () => void;
   scrollToEnd?: () => void;
   nextFocusUpId?: number | null;
+  nextFocusUpFallback?: number | null;
   onNativeId?: (id: number | null) => void;
   onLongPress?: () => void;
 };
@@ -36,6 +37,7 @@ const AppCard: React.FC<AppCardProps> = ({
   scrollToStart,
   scrollToEnd,
   nextFocusUpId,
+  nextFocusUpFallback,
   onNativeId,
   onLongPress,
 }) => {
@@ -53,7 +55,11 @@ const AppCard: React.FC<AppCardProps> = ({
   if (Platform.OS === 'android' && nativeId !== null) {
     if (isFirst) focusProps.nextFocusLeft = nativeId;
     if (isLast) focusProps.nextFocusRight = nativeId;
-    if (nextFocusUpId) focusProps.nextFocusUp = nextFocusUpId;
+    if (nextFocusUpId) {
+      focusProps.nextFocusUp = nextFocusUpId;
+    } else if (nextFocusUpFallback) {
+      focusProps.nextFocusUp = nextFocusUpFallback;
+    }
   }
 
   const handlePress = () => {

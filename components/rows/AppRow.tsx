@@ -55,6 +55,7 @@ const AppRow: React.FC<AppRowProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     overflow: 'visible',
+    marginBottom: 32
   },
   content: {
     paddingHorizontal: 75,

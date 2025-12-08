@@ -68,9 +68,11 @@ function App() {
   const [recommendations, setRecommendations] = useState<TraktMovie[]>([]);
   const [recommendedShows, setRecommendedShows] = useState<TraktShow[]>([]);
   const [upNextShows, setUpNextShows] = useState<TraktShow[]>([]);
+  const [needsTraktAuth, setNeedsTraktAuth] = useState(false);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollRef = useRef<Animated.ScrollView | null>(null);
+  const pollCancelRef = useRef<() => void>(() => {});
 
   const contentTranslateX = useRef(new Animated.Value(0)).current;
   const contentOpacity = useRef(new Animated.Value(1)).current;
@@ -106,11 +108,12 @@ function App() {
       .then(tok => {
         if (tok && isTokenValid(tok)) {
           setTraktToken(tok);
+          setNeedsTraktAuth(false);
         } else {
-          startDeviceCode();
+          setNeedsTraktAuth(true);
         }
       })
-      .catch(() => startDeviceCode());
+      .catch(() => setNeedsTraktAuth(true));
   }, []);
 
   useEffect(() => {
@@ -154,44 +157,62 @@ function App() {
       if (prev.includes(pkg)) return prev;
       const next = [...prev, pkg];
       saveFavoritePackages(next);
-    return next;
-  });
-};
+      return next;
+    });
+  };
 
-const startDeviceCode = () => {
-  requestDeviceCode().then(res => {
-    if (!res) return;
-    setDeviceCode(res.user_code);
-    setDeviceUrl(res.verification_url);
-    setShowDeviceModal(true);
-    const code = res.device_code;
-    const intervalMs = Math.max((res.interval || 5) * 1000, 5000);
-    const maxAttempts = Math.ceil((res.expires_in || 300) * 1000 / intervalMs);
-    let attempts = 0;
-    const poll = () => {
-      attempts += 1;
-      pollForToken(code)
-        .then(tok => {
-          if (tok && tok.access_token) {
-            setTraktToken(tok);
-            setShowDeviceModal(false);
-          } else if (attempts < maxAttempts) {
-            setTimeout(poll, intervalMs);
-          } else {
-            setShowDeviceModal(false);
-          }
-        })
-        .catch(() => {
-          if (attempts < maxAttempts) {
-            setTimeout(poll, intervalMs);
-          } else {
-            setShowDeviceModal(false);
-          }
-        });
+  const startDeviceCode = () => {
+    let cancelled = false;
+
+    pollCancelRef.current = () => {
+      cancelled = true;
+      setShowDeviceModal(false);
     };
-    setTimeout(poll, intervalMs);
-  });
-};
+
+    setNeedsTraktAuth(true);
+
+    requestDeviceCode().then(res => {
+      if (!res || cancelled) return;
+      setDeviceCode(res.user_code);
+      setDeviceUrl(res.verification_url);
+      setShowDeviceModal(true);
+      const code = res.device_code;
+      const intervalMs = Math.max((res.interval || 5) * 1000, 5000);
+      const maxAttempts = Math.ceil((res.expires_in || 300) * 1000 / intervalMs);
+      let attempts = 0;
+      const poll = () => {
+        if (cancelled) return;
+        attempts += 1;
+        pollForToken(code)
+          .then(tok => {
+            if (cancelled) return;
+            if (tok && tok.access_token) {
+              setTraktToken(tok);
+              setNeedsTraktAuth(false);
+              setShowDeviceModal(false);
+            } else if (attempts < maxAttempts) {
+              setTimeout(poll, intervalMs);
+            } else {
+              setShowDeviceModal(false);
+            }
+          })
+          .catch(() => {
+            if (cancelled) return;
+            if (attempts < maxAttempts) {
+              setTimeout(poll, intervalMs);
+            } else {
+              setShowDeviceModal(false);
+            }
+          });
+      };
+      setTimeout(poll, intervalMs);
+    });
+  };
+
+  const handleCloseDeviceModal = () => {
+    pollCancelRef.current();
+    setNeedsTraktAuth(true);
+  };
 
   const handleTabChange = (next: TabKey) => {
     if (next === activeTab) return;
@@ -227,6 +248,7 @@ const startDeviceCode = () => {
         visible={showDeviceModal}
         code={deviceCode}
         url={deviceUrl}
+        onClose={handleCloseDeviceModal}
       />
       {activeTab === 'forYou' && (
         <Animated.View
@@ -300,6 +322,8 @@ const startDeviceCode = () => {
               activeTabHandle={activeTabHandle}
               onFirstRowNativeIdChange={setTabDownTarget}
               recommendedMovies={recommendations}
+              showTraktBanner={needsTraktAuth}
+              onConnectTrakt={startDeviceCode}
             />
           ) : activeTab === 'movies' ? (
             <MoviesScreen
@@ -352,7 +376,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingTop: 24,
-    paddingBottom: 24,
   },
   placeholderContainer: {
     minHeight: 400,

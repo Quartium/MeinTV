@@ -5,12 +5,18 @@ type Props = {
   visible: boolean;
   code?: string;
   url?: string;
+  onClose?: () => void;
 };
 
-const DeviceCodeModal: React.FC<Props> = ({ visible, code, url }) => {
+const DeviceCodeModal: React.FC<Props> = ({ visible, code, url, onClose }) => {
   if (!visible) return null;
   return (
-    <Modal transparent animationType="fade" visible={visible}>
+    <Modal
+      transparent
+      animationType="fade"
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View style={styles.overlay}>
         <View style={styles.box}>
           <Text style={styles.title}>Connect Trakt</Text>
@@ -19,6 +25,7 @@ const DeviceCodeModal: React.FC<Props> = ({ visible, code, url }) => {
           <Text style={styles.subtitle}>and enter the code</Text>
           <Text style={styles.code}>{code || '------'}</Text>
           <Text style={styles.note}>Leave this screen open while you authorize.</Text>
+          <Text style={styles.dismiss}>Press Back to close this prompt.</Text>
         </View>
       </View>
     </Modal>
@@ -67,6 +74,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 8,
     textAlign: 'center',
+  },
+  dismiss: {
+    color: '#bbbbbb',
+    fontSize: 12,
+    marginTop: 12,
+    textAlign: 'center',
+    opacity: 0.8,
   },
 });
 

@@ -1,6 +1,7 @@
 // src/screens/HomeScreen.tsx
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import PosterRow from '../components/rows/PosterRow';
 import AppRow from '../components/rows/AppRow';
 import { getTrendingMovies, TraktMovie } from '../services/traktClient';
@@ -38,6 +39,8 @@ type HomeScreenProps = {
   activeTabHandle: number | null;
   onFirstRowNativeIdChange: (id: number | null) => void;
   recommendedMovies?: TraktMovie[];
+  showTraktBanner: boolean;
+  onConnectTrakt: () => void;
 };
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -51,10 +54,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   activeTabHandle,
   onFirstRowNativeIdChange,
   recommendedMovies = [],
+  showTraktBanner,
+  onConnectTrakt,
 }) => {
 
   // ❗ Start empty. No fallback local posters.
   const [topPicks, setTopPicks] = useState<PosterItem[]>([]);
+  const traktScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     let cancelled = false;
@@ -116,7 +122,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <View>
-
       {/* HERO OVERLAY ALWAYS PRESENT, even if no posters */}
       <HeroOverlay
         hero={hero}
@@ -141,14 +146,61 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         </>
       )}
 
-      {apps.length > 0 && (
-        <>
-          <RowTitle title="Favorite apps" />
-          <AppRow apps={apps} onFocusApp={scrollToHalf} />
-        </>
-      )}
+      <LinearGradient
+        colors={['transparent', '#290708']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 5 }}
+        style={styles.background}
+      >
 
-      <View style={{ height: 160 }} />
+        {apps.length > 0 && (
+          <>
+            <RowTitle title="Favorite apps" />
+            <AppRow apps={apps} onFocusApp={scrollToHalf} />
+          </>
+        )}
+
+        {showTraktBanner && (
+          <Animated.View
+            style={[
+              styles.traktBannerWrapper,
+              { transform: [{ scale: traktScale }] },
+            ]}
+          >
+            <TouchableOpacity
+              activeOpacity={0.95}
+              onPress={onConnectTrakt}
+              onFocus={() =>
+                Animated.spring(traktScale, {
+                  toValue: 1.06,
+                  useNativeDriver: true,
+                  friction: 7,
+                  tension: 90,
+                }).start()
+              }
+              onBlur={() =>
+                Animated.spring(traktScale, {
+                  toValue: 1,
+                  useNativeDriver: true,
+                  friction: 7,
+                  tension: 90,
+                }).start()
+              }
+              focusable
+              style={styles.traktBanner}
+            >
+              <View style={styles.traktBannerBorder} />
+              <Text style={styles.traktBannerTitle}>Explore movies on Trakt</Text>
+              <View style={{ height: 10 }} />
+              <Text style={styles.traktBannerBody}>
+                {`See it. Save it. Watch it later.\nStart curating your personal movie queue.`}
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
+        <View style={{ height: 160 }} />
+      </LinearGradient>
     </View>
   );
 };
@@ -243,6 +295,31 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginHorizontal: 75,
     opacity: 0.7,
+  },
+  traktBannerWrapper: {
+    marginHorizontal: 75,
+    overflow: 'visible',
+  },
+  traktBanner: {
+    paddingVertical: 24,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    backgroundColor: '#000',
+  },
+  traktBannerTitle: {
+    color: 'white',
+    fontSize: 32,
+    lineHeight: 39,
+    fontFamily: 'Inter-Regular',
+  },
+  traktBannerBody: {
+    color: 'white',
+    fontSize: 18,
+    lineHeight: 24,
+    fontFamily: 'Inter-Regular',
+  },
+  background: {
+    borderRadius: 0,
   },
 });
 

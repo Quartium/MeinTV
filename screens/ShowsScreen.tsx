@@ -7,13 +7,14 @@ import {
   getTrendingShows,
   TraktShow,
 } from '../services/traktClient';
-import { playInKodiWithElementum } from '../services/kodiClient';
 
 type PosterItem = {
   id: string;
   title: string;
   image: string;
   tmdbId?: number;
+  traktId?: number;
+  slug?: string;
 };
 
 type ShowsScreenProps = {
@@ -22,6 +23,7 @@ type ShowsScreenProps = {
   recommendedShows?: TraktShow[];
   upNextShows?: TraktShow[];
   onRequestScroll: (y: number) => void;
+  onOpenShowDetails?: (show: PosterItem) => void;
 };
 
 const ShowsScreen: React.FC<ShowsScreenProps> = ({
@@ -30,6 +32,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
   recommendedShows = [],
   upNextShows = [],
   onRequestScroll,
+  onOpenShowDetails,
 }) => {
   const [trending, setTrending] = useState<PosterItem[]>([]);
   const [popular, setPopular] = useState<PosterItem[]>([]);
@@ -53,6 +56,8 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
         title: s.title,
         image: s.thumbUrl || s.posterUrl,
         tmdbId: s.tmdbId,
+        traktId: s.traktId,
+        slug: s.slug,
       }));
 
     const load = async () => {
@@ -68,8 +73,6 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
         setTrending(toPosterItems(trendingRes));
         setPopular(toPosterItems(popularRes));
         setAnticipated(toPosterItems(anticipatedRes));
-        setRecs(toPosterItems(recommendedShows || []));
-        setUpNext(toPosterItems(upNextShows || []));
       } catch (e) {
         console.warn('Failed to load shows screen rows', e);
       }
@@ -88,6 +91,8 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
         title: s.title,
         image: s.thumbUrl || s.posterUrl,
         tmdbId: s.tmdbId,
+        traktId: s.traktId,
+        slug: s.slug,
       }));
       setRecs(mapped);
     } else {
@@ -102,6 +107,8 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
         title: s.title,
         image: s.thumbUrl || s.posterUrl,
         tmdbId: s.tmdbId,
+        traktId: s.traktId,
+        slug: s.slug,
       }));
       setUpNext(mapped);
     } else {
@@ -149,11 +156,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
   const noopFocus = () => {};
   const handlePress = (_index: number, item: PosterItem) => {
-    playInKodiWithElementum({
-      id: item.id,
-      title: item.title,
-      tmdbId: item.tmdbId,
-    });
+    onOpenShowDetails?.(item);
   };
 
   return (

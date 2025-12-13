@@ -31,12 +31,57 @@ export type PlayableMovie = {
   tmdbId?: number;
 };
 
+export type KodiMoviePayload = {
+  type: 'movie';
+  tmdbId: number;
+  title: string;
+  id: string;
+};
+
+export type KodiEpisodePayload = {
+  type: 'episode';
+  tmdbShowId: number;
+  season: number;
+  episode: number;
+  title: string;
+  id: string;
+};
+
+export type KodiPlayable = KodiMoviePayload | KodiEpisodePayload;
+
 export function triggerElementumSearch(title: string) {
   return playInKodiWithElementum({ id: title, title });
 }
 
-export async function playInKodiWithElementum(movie: PlayableMovie) {
-  if (!movie.title) return;
+function buildElementumPluginUrl(input: KodiPlayable | PlayableMovie): string {
+  if ('type' in input) {
+    if (input.type === 'movie') {
+      return `plugin://plugin.video.elementum/library/play/movie/${input.tmdbId}`;
+    }
+    return `plugin://plugin.video.elementum/library/play/show/${input.tmdbShowId}/season/${input.season}/episode/${input.episode}`;
+  }
+
+  const hasTmdb = typeof input.tmdbId === 'number' && input.tmdbId > 0;
+  return hasTmdb
+    ? `plugin://plugin.video.elementum/library/play/movie/${input.tmdbId}`
+    : `plugin://plugin.video.elementum/movies/search?q=${encodeURIComponent(
+        input.title,
+      )}`;
+}
+
+function buildElementumFallbackUrl(input: KodiPlayable | PlayableMovie): string | null {
+  if ('type' in input) return null;
+  const hasTmdb = typeof input.tmdbId === 'number' && input.tmdbId > 0;
+  if (hasTmdb) return null;
+  return `plugin://plugin.video.elementum/search?q=${encodeURIComponent(
+    input.title,
+  )}`;
+}
+
+export async function playInKodiWithElementum(
+  input: KodiPlayable | PlayableMovie,
+) {
+  if (!input.title) return;
 
   const pingOk = await sendKodiNotification(
     'MeinTV',
@@ -51,15 +96,15 @@ export async function playInKodiWithElementum(movie: PlayableMovie) {
 
   let kickedOff = false;
 
-  if (Platform.OS === 'android' && TvApps?.searchElementum) {
+  if (Platform.OS === 'android' && TvApps?.searchElementum && !('type' in input)) {
     try {
       await TvApps.searchElementum(
-        movie.title,
+        input.title,
         KODI_HOST,
         KODI_PORT,
         KODI_USER,
         KODI_PASS,
-        movie.tmdbId,
+        input.tmdbId,
       );
       kickedOff = true;
       // Let the native WorkManager flow handle Kodi; avoid extra intents that might bounce focus back.
@@ -70,17 +115,8 @@ export async function playInKodiWithElementum(movie: PlayableMovie) {
     }
   }
 
-  const hasTmdb = typeof movie.tmdbId === 'number' && movie.tmdbId > 0;
-  const pluginUrl = hasTmdb
-    ? `plugin://plugin.video.elementum/library/play/movie/${movie.tmdbId}`
-    : `plugin://plugin.video.elementum/movies/search?q=${encodeURIComponent(
-        movie.title,
-      )}`;
-  const fallbackUrl = hasTmdb
-    ? pluginUrl
-    : `plugin://plugin.video.elementum/search?q=${encodeURIComponent(
-        movie.title,
-      )}`;
+  const pluginUrl = buildElementumPluginUrl(input);
+  const fallbackUrl = buildElementumFallbackUrl(input);
 
   // Try direct plugin intent (best chance while app is foreground)
   if (Platform.OS === 'android' && TvApps?.openKodiPlugin) {
@@ -104,9 +140,8 @@ export async function playInKodiWithElementum(movie: PlayableMovie) {
 
   const ok = await jsonRpcOpen(pluginUrl);
   let succeeded = ok;
-  if (!ok && !hasTmdb) {
-    const fallbackOk = await jsonRpcOpen(fallbackUrl);
-    succeeded = fallbackOk;
+  if (!ok && fallbackUrl) {
+    succeeded = await jsonRpcOpen(fallbackUrl);
   }
 
   if (succeeded) {
@@ -141,11 +176,21 @@ async function jsonRpcOpen(pluginUrl: string): Promise<boolean> {
       await delay(800);
     }
     try {
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
       });
+      if (!res.ok) return false;
+
+      const bodyText = await res.text().catch(() => '');
+      if (!bodyText) return true;
+      try {
+        const json = JSON.parse(bodyText);
+        if (json && json.error) return false;
+      } catch {
+        // non-JSON response; treat 2xx as success
+      }
       return true;
     } catch (e) {
       if (attempt === 2) {

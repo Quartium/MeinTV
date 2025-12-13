@@ -37,6 +37,20 @@ export type TraktMovie = {
 
 export type TraktShow = TraktMovie;
 
+export type TraktEpisode = {
+  season?: number;
+  number?: number;
+  title: string;
+  overview?: string;
+  rating?: number;
+  runtime?: number;
+};
+
+export type TraktSeason = {
+  number: number;
+  episodes: TraktEpisode[];
+};
+
 type TraktMovieEntity = TraktMediaEntity;
 type TraktShowEntity = TraktMediaEntity;
 
@@ -272,4 +286,45 @@ export async function getUpNextShows(
     .map(item => (item && item.show ? item.show : null))
     .filter(Boolean)
     .map((s: any) => mapMediaEntity(s as TraktMediaEntity));
+}
+
+export async function getShowSeasons(
+  showIdOrSlug: string | number,
+): Promise<TraktSeason[]> {
+  const showKey = encodeURIComponent(String(showIdOrSlug));
+  const data = await traktRequest<any[]>(
+    `/shows/${showKey}/seasons`,
+    {
+      // includes episodes array inside each season
+      extended: 'episodes,full',
+    },
+  );
+
+  if (!Array.isArray(data)) return [];
+
+  const seasons: TraktSeason[] = data
+    .filter(s => s && typeof s.number === 'number')
+    .map((s: any): TraktSeason => {
+      const episodesRaw = Array.isArray(s.episodes) ? s.episodes : [];
+      const episodes: TraktEpisode[] = episodesRaw
+        .filter((e: any) => e)
+        .map(
+          (e: any): TraktEpisode => ({
+            season: typeof e.season === 'number' ? e.season : s.number,
+            number: typeof e.number === 'number' ? e.number : undefined,
+            title: e.title || '',
+            overview: e.overview || '',
+            rating: typeof e.rating === 'number' ? e.rating : undefined,
+            runtime: typeof e.runtime === 'number' ? e.runtime : undefined,
+          }),
+        );
+      episodes.sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
+
+      return {
+        number: s.number,
+        episodes,
+      };
+    });
+  seasons.sort((a, b) => a.number - b.number);
+  return seasons;
 }

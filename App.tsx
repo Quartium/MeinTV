@@ -16,6 +16,7 @@ import HomeScreen from './screens/HomeScreen';
 import MoviesScreen from './screens/MoviesScreen';
 import ShowsScreen from './screens/ShowsScreen';
 import AppsScreen from './screens/AppsScreen';
+import ShowDetailsScreen from './screens/ShowDetailsScreen';
 import { loadFavoritePackages, saveFavoritePackages } from './services/favorites';
 import DeviceCodeModal from './components/DeviceCodeModal';
 import {
@@ -47,6 +48,14 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('forYou');
+  const [activeShowDetails, setActiveShowDetails] = useState<{
+    id: string;
+    title: string;
+    image?: string;
+    tmdbId?: number;
+    traktId?: number;
+    slug?: string;
+  } | null>(null);
 
   // No Gladiator default, start empty
   const [hero, setHero] = useState<HeroData>({
@@ -296,13 +305,15 @@ function App() {
             : undefined
         }
       >
-        <TopBar
-          activeTab={activeTab}
-          onChangeTab={handleTabChange}
-          scrollToTop={scrollToTop}
-          onActiveTabHandleChange={setActiveTabHandle}
-          nextFocusDownId={tabDownTarget}
-        />
+        {!activeShowDetails && (
+          <TopBar
+            activeTab={activeTab}
+            onChangeTab={handleTabChange}
+            scrollToTop={scrollToTop}
+            onActiveTabHandleChange={setActiveTabHandle}
+            nextFocusDownId={tabDownTarget}
+          />
+        )}
 
         <Animated.View
           style={{
@@ -338,6 +349,9 @@ function App() {
               recommendedShows={recommendedShows}
               upNextShows={upNextShows}
               onRequestScroll={scrollToPosition}
+              onOpenShowDetails={show => {
+                setActiveShowDetails(show);
+              }}
             />
           ) : activeTab === 'apps' ? (
             <AppsScreen
@@ -352,11 +366,25 @@ function App() {
           )}
         </Animated.View>
       </Animated.ScrollView>
+
+      {activeShowDetails && (
+        <View style={StyleSheet.absoluteFill}>
+          <ShowDetailsScreen
+            show={activeShowDetails}
+            activeTabHandle={activeTabHandle}
+            onBack={() => {
+              setActiveShowDetails(null);
+              setActiveTab('shows');
+            }}
+            onFirstFocusableIdChange={() => {}}
+          />
+        </View>
+      )}
     </View>
   );
 }
 
-function PlaceholderTab({ activeTab }: { activeTab: TabKey }) {
+function PlaceholderTab({ activeTab: _activeTab }: { activeTab: TabKey }) {
   const label = 'Apps tab - static for now';
 
   return (

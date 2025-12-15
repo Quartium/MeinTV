@@ -12,6 +12,9 @@ type TvAppsNative = {
     user: string,
     pass: string,
     tmdbId?: number,
+    tmdbShowId?: number,
+    season?: number,
+    episode?: number,
   ) => Promise<any>;
 };
 
@@ -83,28 +86,39 @@ export async function playInKodiWithElementum(
 ) {
   if (!input.title) return;
 
-  const pingOk = await sendKodiNotification(
-    'MeinTV',
-    'Pinging Kodi before search…',
-  );
+  const isEpisode = 'type' in input && input.type === 'episode';
 
-  if (!pingOk) {
-    showToast('Kodi not reachable yet; still trying…');
+  const pingOk = await sendKodiPing();
+  if (pingOk) {
+    await sendKodiNotification('MeinTV', 'Kodi reachable, opening search…');
   } else {
-    showToast('Kodi reachable, opening search…');
+    showToast('Kodi not reachable yet; launching and waiting…');
   }
 
   let kickedOff = false;
 
-  if (Platform.OS === 'android' && TvApps?.searchElementum && !('type' in input)) {
+  if (Platform.OS === 'android' && TvApps?.searchElementum) {
     try {
+      const tmdbId =
+        'type' in input
+          ? input.type === 'movie'
+            ? input.tmdbId
+            : undefined
+          : input.tmdbId;
+      const tmdbShowId = isEpisode ? input.tmdbShowId : undefined;
+      const season = isEpisode ? input.season : undefined;
+      const episode = isEpisode ? input.episode : undefined;
+
       await TvApps.searchElementum(
         input.title,
         KODI_HOST,
         KODI_PORT,
         KODI_USER,
         KODI_PASS,
-        input.tmdbId,
+        tmdbId,
+        tmdbShowId,
+        season,
+        episode,
       );
       kickedOff = true;
       // Let the native WorkManager flow handle Kodi; avoid extra intents that might bounce focus back.
@@ -136,6 +150,12 @@ export async function playInKodiWithElementum(
     } catch (e) {
       console.warn('Failed to launch Kodi', e);
     }
+  }
+
+  // Cold start can take a while; wait until Kodi responds before sending JSON-RPC.
+  const ready = pingOk || (await waitForKodiReady());
+  if (!ready) {
+    showToast('Kodi not reachable after waiting; attempting request anyway');
   }
 
   const ok = await jsonRpcOpen(pluginUrl);
@@ -201,6 +221,28 @@ async function jsonRpcOpen(pluginUrl: string): Promise<boolean> {
   return false;
 }
 
+async function sendKodiPing(): Promise<boolean> {
+  const payload = {
+    jsonrpc: '2.0',
+    id: 98,
+    method: 'JSONRPC.Ping',
+  };
+  try {
+    const res = await fetchWithTimeout(KODI_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: BASIC_AUTH,
+      },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch (e) {
+    console.warn('Kodi ping failed', e);
+    return false;
+  }
+}
+
 async function sendKodiNotification(
   title: string,
   message: string,
@@ -226,6 +268,16 @@ async function sendKodiNotification(
     console.warn('Kodi notification failed', e);
     return false;
   }
+}
+
+async function waitForKodiReady(maxWaitMs = 30000, stepMs = 1200) {
+  const started = Date.now();
+  while (Date.now() - started < maxWaitMs) {
+    const ok = await sendKodiPing();
+    if (ok) return true;
+    await delay(stepMs);
+  }
+  return false;
 }
 
 async function fetchWithTimeout(

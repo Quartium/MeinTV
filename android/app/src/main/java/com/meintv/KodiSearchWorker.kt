@@ -25,11 +25,19 @@ class KodiSearchWorker(
     val user = inputData.getString(KEY_USER)
     val pass = inputData.getString(KEY_PASS)
     val tmdbId = inputData.getLong(KEY_TMDB_ID, -1L).takeIf { it > 0 }
+    val tmdbShowId = inputData.getLong(KEY_TMDB_SHOW_ID, -1L).takeIf { it > 0 }
+    val season = inputData.getInt(KEY_SEASON, -1).takeIf { it >= 0 }
+    val episode = inputData.getInt(KEY_EPISODE, -1).takeIf { it >= 0 }
 
     val encodedTitle = URLEncoder.encode(title, "UTF-8")
-    val pluginUrl = tmdbId?.let {
-      "plugin://plugin.video.elementum/library/play/movie/$it"
-    } ?: "plugin://plugin.video.elementum/movies/search?q=$encodedTitle"
+    val pluginUrl = when {
+      tmdbShowId != null && season != null && episode != null ->
+        "plugin://plugin.video.elementum/library/play/show/$tmdbShowId/season/$season/episode/$episode"
+      tmdbId != null ->
+        "plugin://plugin.video.elementum/library/play/movie/$tmdbId"
+      else ->
+        "plugin://plugin.video.elementum/movies/search?q=$encodedTitle"
+    }
 
     // Best effort: launch Kodi so it's running
     try {
@@ -40,10 +48,12 @@ class KodiSearchWorker(
       Log.d(TAG, "Kodi launch failed: ${e.message}")
     }
 
-    // Give Kodi a moment to start
-    delay(900)
-
     val authHeader = buildAuth(user, pass)
+    val ready = waitForKodiReady(host, port, authHeader)
+    if (!ready) {
+      Log.d(TAG, "Kodi not ready after wait; retrying later")
+      return Result.retry()
+    }
     // Quick visual proof in Kodi UI
     sendJsonRpc(
       host,
@@ -55,11 +65,16 @@ class KodiSearchWorker(
     // Try playback or search
     val primary = """{"jsonrpc":"2.0","id":2,"method":"Player.Open","params":{"item":{"file":"$pluginUrl"}}}"""
     val secondarySearch =
-      """{"jsonrpc":"2.0","id":3,"method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.elementum/movies/search?q=$encodedTitle"}}}"""
+      if (tmdbShowId != null) {
+        """{"jsonrpc":"2.0","id":3,"method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.elementum/search?q=$encodedTitle"}}}"""
+      } else {
+        """{"jsonrpc":"2.0","id":3,"method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.elementum/movies/search?q=$encodedTitle"}}}"""
+      }
     val tertiarySearch =
       """{"jsonrpc":"2.0","id":4,"method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.elementum/search?q=$encodedTitle"}}}"""
+    val burstType = if (tmdbShowId != null) "tv" else "movie"
     val burstFallback =
-      """{"jsonrpc":"2.0","id":5,"method":"Addons.ExecuteAddon","params":{"addonid":"plugin.video.elementum","params":"?action=burst&search=$encodedTitle&type=movie","wait":false}}"""
+      """{"jsonrpc":"2.0","id":5,"method":"Addons.ExecuteAddon","params":{"addonid":"plugin.video.elementum","params":"?action=burst&search=$encodedTitle&type=$burstType","wait":false}}"""
 
     val okPrimary = sendJsonRpc(host, port, authHeader, primary)
     val okSecondary = if (!okPrimary) sendJsonRpc(host, port, authHeader, secondarySearch) else true
@@ -108,6 +123,23 @@ class KodiSearchWorker(
     return false
   }
 
+  private suspend fun waitForKodiReady(
+    host: String,
+    port: Int,
+    authHeader: String?,
+    timeoutMs: Long = 30000,
+    stepMs: Long = 1200,
+  ): Boolean {
+    val pingPayload = """{"jsonrpc":"2.0","id":0,"method":"JSONRPC.Ping"}"""
+    val start = System.currentTimeMillis()
+    while (System.currentTimeMillis() - start < timeoutMs) {
+      val ok = sendJsonRpc(host, port, authHeader, pingPayload)
+      if (ok) return true
+      delay(stepMs)
+    }
+    return false
+  }
+
   companion object {
     const val KEY_TITLE = "title"
     const val KEY_HOST = "host"
@@ -115,9 +147,22 @@ class KodiSearchWorker(
     const val KEY_USER = "user"
     const val KEY_PASS = "pass"
     const val KEY_TMDB_ID = "tmdb_id"
+    const val KEY_TMDB_SHOW_ID = "tmdb_show_id"
+    const val KEY_SEASON = "season"
+    const val KEY_EPISODE = "episode"
     private const val TAG = "KodiSearchWorker"
 
-    fun data(title: String, host: String, port: Int, user: String?, pass: String?, tmdbId: Long?): Data {
+    fun data(
+      title: String,
+      host: String,
+      port: Int,
+      user: String?,
+      pass: String?,
+      tmdbId: Long?,
+      tmdbShowId: Long?,
+      season: Int?,
+      episode: Int?,
+    ): Data {
       return Data.Builder()
         .putString(KEY_TITLE, title)
         .putString(KEY_HOST, host)
@@ -125,6 +170,9 @@ class KodiSearchWorker(
         .putString(KEY_USER, user)
         .putString(KEY_PASS, pass)
         .putLong(KEY_TMDB_ID, tmdbId ?: -1L)
+        .putLong(KEY_TMDB_SHOW_ID, tmdbShowId ?: -1L)
+        .putInt(KEY_SEASON, season ?: -1)
+        .putInt(KEY_EPISODE, episode ?: -1)
         .build()
     }
   }

@@ -178,11 +178,26 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
     user: String?,
     pass: String?,
     tmdbId: Double?,
+    tmdbShowId: Double?,
+    season: Double?,
+    episode: Double?,
     promise: Promise,
   ) {
     try {
       val work = OneTimeWorkRequestBuilder<KodiSearchWorker>()
-        .setInputData(KodiSearchWorker.data(title, host, port, user, pass, tmdbId?.toLong()))
+        .setInputData(
+          KodiSearchWorker.data(
+            title = title,
+            host = host,
+            port = port,
+            user = user,
+            pass = pass,
+            tmdbId = tmdbId?.toLong(),
+            tmdbShowId = tmdbShowId?.toLong(),
+            season = season?.toInt(),
+            episode = episode?.toInt(),
+          ),
+        )
         .build()
       WorkManager.getInstance(reactContext)
         .enqueueUniqueWork(

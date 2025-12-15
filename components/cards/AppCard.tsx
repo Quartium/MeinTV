@@ -24,6 +24,7 @@ type AppCardProps = {
   nextFocusUpId?: number | null;
   nextFocusUpFallback?: number | null;
   onNativeId?: (id: number | null) => void;
+  onRef?: (ref: TouchableOpacity | null) => void;
   onLongPress?: () => void;
 };
 
@@ -39,6 +40,7 @@ const AppCard: React.FC<AppCardProps> = ({
   nextFocusUpId,
   nextFocusUpFallback,
   onNativeId,
+  onRef,
   onLongPress,
 }) => {
   const [focused, setFocused] = useState(false);
@@ -72,7 +74,10 @@ const AppCard: React.FC<AppCardProps> = ({
 
   return (
     <TouchableOpacity
-      ref={ref}
+      ref={el => {
+        ref.current = el;
+        onRef?.(el);
+      }}
       {...focusProps}
       onPress={handlePress}
       onLongPress={onLongPress}

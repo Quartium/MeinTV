@@ -170,6 +170,15 @@ function App() {
     });
   };
 
+  const removeFavorite = (pkg: string) => {
+    setFavoritePackages(prev => {
+      if (!prev.includes(pkg)) return prev;
+      const next = prev.filter(p => p !== pkg);
+      saveFavoritePackages(next);
+      return next;
+    });
+  };
+
   const startDeviceCode = () => {
     let cancelled = false;
 
@@ -365,17 +374,18 @@ function App() {
                   }}
                 />
               ) : activeTab === 'apps' ? (
-                <AppsScreen
-                  apps={apps}
-                  activeTabHandle={activeTabHandle}
-                  onFirstAppNativeIdChange={setTabDownTarget}
-                  favoritePackages={favoritePackages}
-                  onAddFavorite={addFavorite}
-                />
-              ) : (
-                <PlaceholderTab activeTab={activeTab} />
-              )}
-            </Animated.View>
+            <AppsScreen
+              apps={apps}
+              activeTabHandle={activeTabHandle}
+              onFirstAppNativeIdChange={setTabDownTarget}
+              favoritePackages={favoritePackages}
+              onAddFavorite={addFavorite}
+              onRemoveFavorite={removeFavorite}
+            />
+          ) : (
+            <PlaceholderTab activeTab={activeTab} />
+          )}
+        </Animated.View>
           </Animated.ScrollView>
         </>
       )}

@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AppCard from '../components/cards/AppCard';
+import TvContextMenu from '../components/TvContextMenu';
 
 type TvAppInfo = {
   packageName: string;
@@ -15,6 +16,7 @@ type AppsScreenProps = {
   onFirstAppNativeIdChange: (id: number | null) => void;
   favoritePackages: string[];
   onAddFavorite: (pkg: string) => void;
+  onRemoveFavorite: (pkg: string) => void;
 };
 
 const AppsScreen: React.FC<AppsScreenProps> = ({
@@ -23,8 +25,14 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
   onFirstAppNativeIdChange,
   favoritePackages,
   onAddFavorite,
+  onRemoveFavorite,
 }) => {
   const [firstId, setFirstId] = useState<number | null>(null);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [selectedPackageName, setSelectedPackageName] = useState<string | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
+  const [returnFocusRef, setReturnFocusRef] = useState<TouchableOpacity | null>(null);
+  const cardRefs = useRef<Record<string, TouchableOpacity | null>>({});
 
   const rows = useMemo(() => {
     const chunks: TvAppInfo[][] = [];
@@ -38,13 +46,70 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
     onFirstAppNativeIdChange(firstId);
   }, [firstId, onFirstAppNativeIdChange]);
 
-  const handleLongPress = (pkg: string) => {
-    if (favoritePackages.includes(pkg)) return;
-    Alert.alert('Add to favorites?', undefined, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Add', onPress: () => onAddFavorite(pkg) },
-    ]);
+  const handleLongPress = (pkg: string, label: string) => {
+    setSelectedPackageName(pkg);
+    setSelectedLabel(label);
+    setReturnFocusRef(cardRefs.current[pkg] ?? null);
+    setMenuVisible(true);
   };
+
+  const closeMenu = () => setMenuVisible(false);
+
+  useEffect(() => {
+    if (!menuVisible) {
+      // Clear selection after focus restoration occurs.
+      const timeout = setTimeout(() => {
+        setSelectedPackageName(null);
+        setSelectedLabel(null);
+      }, 150);
+      return () => clearTimeout(timeout);
+    }
+  }, [menuVisible]);
+
+  const menuItems = useMemo(() => {
+    if (!selectedPackageName) return [];
+    const items = [];
+    if (!favoritePackages.includes(selectedPackageName)) {
+      items.push({
+        key: 'favorite',
+        label: 'Add to favourites',
+        iconName: '❤',
+        onPress: () => {
+          onAddFavorite(selectedPackageName);
+          closeMenu();
+        },
+      });
+    } else {
+      items.push({
+        key: 'remove-favorite',
+        label: 'Remove from favorites',
+        iconName: '♡',
+        onPress: () => {
+          onRemoveFavorite(selectedPackageName);
+          closeMenu();
+        },
+      });
+    }
+    items.push({
+      key: 'info',
+      label: 'Info',
+      iconName: 'ⓘ',
+      onPress: () => {
+        console.log('Info requested for', selectedPackageName);
+        closeMenu();
+      },
+    });
+    items.push({
+      key: 'uninstall',
+      label: 'Uninstall',
+      iconName: '✕',
+      onPress: () => {
+        console.log('Uninstall requested for', selectedPackageName);
+        closeMenu();
+      },
+    });
+    return items;
+  }, [favoritePackages, onAddFavorite, selectedPackageName]);
 
   return (
     <View style={styles.container}>
@@ -58,8 +123,6 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
               const isFirstInRow = colIndex === 0;
               const isLastInRow = colIndex === row.length - 1;
               const rowAbove = rows[rowIndex - 1];
-              const aboveItem =
-                rowAbove && rowAbove[colIndex] ? rowAbove[colIndex] : rowAbove?.[rowAbove.length - 1];
               const aboveIndex =
                 rowAbove && rowAbove[colIndex]
                   ? (rowIndex - 1) * 5 + colIndex
@@ -78,8 +141,13 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
                   isLast={isLastInRow}
                   nextFocusUpId={rowIndex === 0 ? activeTabHandle : undefined}
                   nextFocusUpFallback={rowIndex > 0 ? aboveIndex : undefined}
-                  onNativeId={globalIndex === 0 ? setFirstId : undefined}
-                  onLongPress={() => handleLongPress(item.packageName)}
+                  onNativeId={id => {
+                    if (globalIndex === 0) setFirstId(id);
+                  }}
+                  onRef={ref => {
+                    cardRefs.current[item.packageName] = ref;
+                  }}
+                  onLongPress={() => handleLongPress(item.packageName, item.label)}
                 />
               );
             })}
@@ -88,6 +156,15 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
       </View>
 
       <View style={styles.footerSpacer} />
+
+      <TvContextMenu
+        visible={menuVisible}
+        anchorLabel={selectedLabel ?? undefined}
+        items={menuItems}
+        onRequestClose={closeMenu}
+        initialFocusIndex={0}
+        returnFocusRef={returnFocusRef}
+      />
     </View>
   );
 };

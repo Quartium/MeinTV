@@ -160,6 +160,7 @@ const TopBar: React.FC<TopBarProps> = ({
               }}
               focusable
               activeOpacity={0.7}
+              hasTVPreferredFocus={isActive}
               onLayout={handleTabLayout(index)}
               nextFocusLeft={
                 isFirstTab && firstTabHandle ? firstTabHandle : undefined

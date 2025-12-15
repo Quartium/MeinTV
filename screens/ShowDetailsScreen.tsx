@@ -383,6 +383,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 75,
     paddingTop: 16,
     backgroundColor: 'black',
+    height: '100%'
   },
   header: {
     flexDirection: 'row',

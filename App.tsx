@@ -259,126 +259,125 @@ function App() {
         url={deviceUrl}
         onClose={handleCloseDeviceModal}
       />
-      {activeTab === 'forYou' && (
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              opacity: bgOpacity,
-              transform: [{ translateY: bgTranslateY }],
-            },
-          ]}
-        >
-          {hero.background ? (
-            <ImageBackground
-              source={{ uri: hero.background }}
-              style={StyleSheet.absoluteFill}
-              resizeMode="cover"
-            >
-              <LinearGradient
-                colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,1)']}
-                style={StyleSheet.absoluteFill}
-              />
-            </ImageBackground>
-          ) : (
-            // no hero background yet, just keep a plain dark backdrop
-            <LinearGradient
-              colors={['rgba(0,0,0,1)', 'rgba(0,0,0,1)']}
-              style={StyleSheet.absoluteFill}
-            />
-          )}
-        </Animated.View>
-      )}
-
-      <Animated.ScrollView
-        ref={scrollRef}
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        scrollEventThrottle={16}
-        onScroll={
-          activeTab === 'forYou'
-            ? Animated.event(
-                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                { useNativeDriver: true },
-              )
-            : undefined
-        }
-      >
-        {!activeShowDetails && (
-          <TopBar
-            activeTab={activeTab}
-            onChangeTab={handleTabChange}
-            scrollToTop={scrollToTop}
-            onActiveTabHandleChange={setActiveTabHandle}
-            nextFocusDownId={tabDownTarget}
-          />
-        )}
-
-        <Animated.View
-          style={{
-            transform: [{ translateX: contentTranslateX }],
-            opacity: contentOpacity,
+      {activeShowDetails ? (
+        <ShowDetailsScreen
+          show={activeShowDetails}
+          activeTabHandle={null}
+          onBack={() => {
+            setActiveShowDetails(null);
+            setActiveTab('shows');
           }}
-        >
-          {activeTab === 'forYou' ? (
-            <HomeScreen
-              hero={hero}
-              onChangeHero={setHero}
-              apps={favoriteApps}
-              scrollToTop={scrollToTop}
-              scrollToHalf={scrollToHalf}
-              activeTopPickIndex={activeTopPickIndex}
-              setActiveTopPickIndex={setActiveTopPickIndex}
-              activeTabHandle={activeTabHandle}
-              onFirstRowNativeIdChange={setTabDownTarget}
-              recommendedMovies={recommendations}
-              showTraktBanner={needsTraktAuth}
-              onConnectTrakt={startDeviceCode}
-            />
-          ) : activeTab === 'movies' ? (
-            <MoviesScreen
-              activeTabHandle={activeTabHandle}
-              onFirstRowNativeIdChange={setTabDownTarget}
-              onRequestScroll={scrollToPosition}
-            />
-          ) : activeTab === 'shows' ? (
-            <ShowsScreen
-              activeTabHandle={activeTabHandle}
-              onFirstRowNativeIdChange={setTabDownTarget}
-              recommendedShows={recommendedShows}
-              upNextShows={upNextShows}
-              onRequestScroll={scrollToPosition}
-              onOpenShowDetails={show => {
-                setActiveShowDetails(show);
-              }}
-            />
-          ) : activeTab === 'apps' ? (
-            <AppsScreen
-              apps={apps}
-              activeTabHandle={activeTabHandle}
-              onFirstAppNativeIdChange={setTabDownTarget}
-              favoritePackages={favoritePackages}
-              onAddFavorite={addFavorite}
-            />
-          ) : (
-            <PlaceholderTab activeTab={activeTab} />
+          onFirstFocusableIdChange={() => {}}
+        />
+      ) : (
+        <>
+          {activeTab === 'forYou' && (
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  opacity: bgOpacity,
+                  transform: [{ translateY: bgTranslateY }],
+                },
+              ]}
+            >
+              {hero.background ? (
+                <ImageBackground
+                  source={{ uri: hero.background }}
+                  style={StyleSheet.absoluteFill}
+                  resizeMode="cover"
+                >
+                  <LinearGradient
+                    colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,1)']}
+                    style={StyleSheet.absoluteFill}
+                  />
+                </ImageBackground>
+              ) : (
+                // no hero background yet, just keep a plain dark backdrop
+                <LinearGradient
+                  colors={['rgba(0,0,0,1)', 'rgba(0,0,0,1)']}
+                  style={StyleSheet.absoluteFill}
+                />
+              )}
+            </Animated.View>
           )}
-        </Animated.View>
-      </Animated.ScrollView>
 
-      {activeShowDetails && (
-        <View style={StyleSheet.absoluteFill}>
-          <ShowDetailsScreen
-            show={activeShowDetails}
-            activeTabHandle={activeTabHandle}
-            onBack={() => {
-              setActiveShowDetails(null);
-              setActiveTab('shows');
-            }}
-            onFirstFocusableIdChange={() => {}}
-          />
-        </View>
+          <Animated.ScrollView
+            ref={scrollRef}
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            scrollEventThrottle={16}
+            onScroll={
+              activeTab === 'forYou'
+                ? Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: true },
+                  )
+                : undefined
+            }
+          >
+            <TopBar
+              activeTab={activeTab}
+              onChangeTab={handleTabChange}
+              scrollToTop={scrollToTop}
+              onActiveTabHandleChange={setActiveTabHandle}
+              nextFocusDownId={tabDownTarget}
+            />
+
+            <Animated.View
+              style={{
+                transform: [{ translateX: contentTranslateX }],
+                opacity: contentOpacity,
+              }}
+            >
+              {activeTab === 'forYou' ? (
+                <HomeScreen
+                  hero={hero}
+                  onChangeHero={setHero}
+                  apps={favoriteApps}
+                  scrollToTop={scrollToTop}
+                  scrollToHalf={scrollToHalf}
+                  activeTopPickIndex={activeTopPickIndex}
+                  setActiveTopPickIndex={setActiveTopPickIndex}
+                  activeTabHandle={activeTabHandle}
+                  onFirstRowNativeIdChange={setTabDownTarget}
+                  recommendedMovies={recommendations}
+                  showTraktBanner={needsTraktAuth}
+                  onConnectTrakt={startDeviceCode}
+                />
+              ) : activeTab === 'movies' ? (
+                <MoviesScreen
+                  activeTabHandle={activeTabHandle}
+                  onFirstRowNativeIdChange={setTabDownTarget}
+                  onRequestScroll={scrollToPosition}
+                />
+              ) : activeTab === 'shows' ? (
+                <ShowsScreen
+                  activeTabHandle={activeTabHandle}
+                  onFirstRowNativeIdChange={setTabDownTarget}
+                  recommendedShows={recommendedShows}
+                  upNextShows={upNextShows}
+                  onRequestScroll={scrollToPosition}
+                  onOpenShowDetails={show => {
+                    setActiveTab('shows');
+                    setActiveShowDetails(show);
+                  }}
+                />
+              ) : activeTab === 'apps' ? (
+                <AppsScreen
+                  apps={apps}
+                  activeTabHandle={activeTabHandle}
+                  onFirstAppNativeIdChange={setTabDownTarget}
+                  favoritePackages={favoritePackages}
+                  onAddFavorite={addFavorite}
+                />
+              ) : (
+                <PlaceholderTab activeTab={activeTab} />
+              )}
+            </Animated.View>
+          </Animated.ScrollView>
+        </>
       )}
     </View>
   );

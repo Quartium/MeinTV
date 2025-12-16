@@ -76,22 +76,25 @@ const PosterCard: React.FC<PosterCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     width: 264,
+    height: 147,
     marginRight: 24,
     marginVertical: 12,
     borderRadius: 12,
-    overflow: 'visible',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
   },
   cardFocused: {
     transform: [{ scale: FOCUS_SCALE }],
-    borderWidth: 2,
     borderColor: '#B5C9CF',
     shadowColor: '#B2C5CD',
     elevation: 3,
   },
   image: {
     width: '100%',
-    height: 147,
-    borderRadius: 12,
+    height: '100%',
     backgroundColor: '#333',
   },
 });

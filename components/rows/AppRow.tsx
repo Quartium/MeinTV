@@ -10,13 +10,19 @@ type AppRowProps = {
     banner?: string | null;
   }[];
   onFocusApp: () => void;
-  onLongPressApp?: (pkg: string) => void;
+  onLongPressApp?: (pkg: string, label: string) => void;
+  onCardRef?: (pkg: string, ref: any) => void;
+  dimExceptPkg?: string | null;
+  dimEnabled?: boolean;
 };
 
 const AppRow: React.FC<AppRowProps> = ({
   apps,
   onFocusApp,
   onLongPressApp,
+  onCardRef,
+  dimExceptPkg,
+  dimEnabled,
 }) => {
   const listRef = useRef<FlatList | null>(null);
 
@@ -44,7 +50,9 @@ const AppRow: React.FC<AppRowProps> = ({
             scrollToEnd={() =>
               listRef.current?.scrollToEnd({ animated: true })
             }
-            onLongPress={() => onLongPressApp?.(item.packageName)}
+            onRef={ref => onCardRef?.(item.packageName, ref)}
+            dimmed={dimEnabled && dimExceptPkg !== undefined && dimExceptPkg !== null && dimExceptPkg !== item.packageName}
+            onLongPress={() => onLongPressApp?.(item.packageName, item.label)}
           />
         )}
       />

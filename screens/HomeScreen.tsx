@@ -1,11 +1,14 @@
 // src/screens/HomeScreen.tsx
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View, NativeModules } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PosterRow from '../components/rows/PosterRow';
 import AppRow from '../components/rows/AppRow';
 import { getTrendingMovies, TraktMovie } from '../services/traktClient';
 import { playInKodiWithElementum } from '../services/kodiClient';
+import TvContextMenu from '../components/TvContextMenu';
+
+const { TvApps } = NativeModules;
 
 type HeroData = {
   title: string;
@@ -41,6 +44,7 @@ type HomeScreenProps = {
   recommendedMovies?: TraktMovie[];
   showTraktBanner: boolean;
   onConnectTrakt: () => void;
+  onRemoveFavorite: (pkg: string) => void;
 };
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -56,11 +60,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   recommendedMovies = [],
   showTraktBanner,
   onConnectTrakt,
+  onRemoveFavorite,
 }) => {
 
   // ❗ Start empty. No fallback local posters.
   const [topPicks, setTopPicks] = useState<PosterItem[]>([]);
   const traktScale = useRef(new Animated.Value(1)).current;
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [selectedPackageName, setSelectedPackageName] = useState<string | null>(null);
+  const [anchorRect, setAnchorRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [returnFocusRef, setReturnFocusRef] = useState<TouchableOpacity | null>(null);
+  const cardRefs = useRef<Record<string, TouchableOpacity | null>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -120,6 +130,81 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     });
   };
 
+  const handleLongPressApp = (pkg: string, label: string) => {
+    const ref = cardRefs.current[pkg];
+    if (ref?.measureInWindow) {
+      ref.measureInWindow((x, y, width, height) => {
+        setAnchorRect({ x, y, width, height });
+        setSelectedPackageName(pkg);
+        setReturnFocusRef(ref);
+        setMenuVisible(true);
+      });
+    } else {
+      setAnchorRect(null);
+      setSelectedPackageName(pkg);
+      setReturnFocusRef(ref ?? null);
+      setMenuVisible(true);
+    }
+  };
+
+  const closeMenu = () => setMenuVisible(false);
+
+  useEffect(() => {
+    if (!menuVisible) {
+      const t = setTimeout(() => {
+        setSelectedPackageName(null);
+        setAnchorRect(null);
+      }, 150);
+      return () => clearTimeout(t);
+    }
+  }, [menuVisible]);
+
+  const menuItems = React.useMemo(() => {
+    if (!selectedPackageName) return [];
+    return [
+      {
+        key: 'open',
+        label: 'Open',
+        iconName: '↗',
+        onPress: () => {
+          if (TvApps?.launchApp) {
+            TvApps.launchApp(selectedPackageName).catch((e: any) =>
+              console.warn('launchApp error from home menu', e),
+            );
+          }
+          closeMenu();
+        },
+      },
+      {
+        key: 'remove-fav',
+        label: 'Remove from favorites',
+        iconName: '♡',
+        onPress: () => {
+          onRemoveFavorite(selectedPackageName);
+          closeMenu();
+        },
+      },
+      {
+        key: 'info',
+        label: 'Info',
+        iconName: 'ⓘ',
+        onPress: () => {
+          console.log('Info requested for', selectedPackageName);
+          closeMenu();
+        },
+      },
+      {
+        key: 'uninstall',
+        label: 'Uninstall',
+        iconName: '✕',
+        onPress: () => {
+          console.log('Uninstall requested for', selectedPackageName);
+          closeMenu();
+        },
+      },
+    ];
+  }, [onRemoveFavorite, selectedPackageName]);
+
   return (
     <View>
       {/* HERO OVERLAY ALWAYS PRESENT, even if no posters */}
@@ -156,7 +241,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         {apps.length > 0 && (
           <>
             <RowTitle title="Favorite apps" />
-            <AppRow apps={apps} onFocusApp={scrollToHalf} />
+            <AppRow
+              apps={apps}
+              onFocusApp={scrollToHalf}
+              onLongPressApp={handleLongPressApp}
+              onCardRef={(pkg, ref) => {
+                cardRefs.current[pkg] = ref;
+              }}
+              dimEnabled={menuVisible}
+              dimExceptPkg={selectedPackageName}
+            />
           </>
         )}
 
@@ -201,6 +295,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
 
         <View style={{ height: 160 }} />
       </LinearGradient>
+
+      <TvContextMenu
+        visible={menuVisible}
+        anchorRect={anchorRect ?? undefined}
+        items={menuItems}
+        onRequestClose={closeMenu}
+        initialFocusIndex={0}
+        returnFocusRef={returnFocusRef}
+      />
     </View>
   );
 };
@@ -216,7 +319,7 @@ function HeroOverlay({
 }) {
   return (
     <View style={styles.heroForegroundBox}>
-      <Text style={styles.heroTitle}>{hero.title}</Text>
+      <Text style={styles.heroTitle} numberOfLines={1}>{hero.title}</Text>
 
       <View style={styles.heroSubtitleRow}>
         <Text style={styles.heroSubtitle} numberOfLines={1}>

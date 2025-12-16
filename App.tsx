@@ -340,22 +340,23 @@ function App() {
                 opacity: contentOpacity,
               }}
             >
-              {activeTab === 'forYou' ? (
-                <HomeScreen
-                  hero={hero}
-                  onChangeHero={setHero}
-                  apps={favoriteApps}
-                  scrollToTop={scrollToTop}
-                  scrollToHalf={scrollToHalf}
-                  activeTopPickIndex={activeTopPickIndex}
-                  setActiveTopPickIndex={setActiveTopPickIndex}
-                  activeTabHandle={activeTabHandle}
-                  onFirstRowNativeIdChange={setTabDownTarget}
-                  recommendedMovies={recommendations}
-                  showTraktBanner={needsTraktAuth}
-                  onConnectTrakt={startDeviceCode}
-                />
-              ) : activeTab === 'movies' ? (
+          {activeTab === 'forYou' ? (
+            <HomeScreen
+              hero={hero}
+              onChangeHero={setHero}
+              apps={favoriteApps}
+              scrollToTop={scrollToTop}
+              scrollToHalf={scrollToHalf}
+              activeTopPickIndex={activeTopPickIndex}
+              setActiveTopPickIndex={setActiveTopPickIndex}
+              activeTabHandle={activeTabHandle}
+              onFirstRowNativeIdChange={setTabDownTarget}
+              recommendedMovies={recommendations}
+              showTraktBanner={needsTraktAuth}
+              onConnectTrakt={startDeviceCode}
+              onRemoveFavorite={removeFavorite}
+            />
+          ) : activeTab === 'movies' ? (
                 <MoviesScreen
                   activeTabHandle={activeTabHandle}
                   onFirstRowNativeIdChange={setTabDownTarget}

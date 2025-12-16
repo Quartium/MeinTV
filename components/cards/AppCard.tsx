@@ -26,6 +26,7 @@ type AppCardProps = {
   onNativeId?: (id: number | null) => void;
   onRef?: (ref: TouchableOpacity | null) => void;
   onLongPress?: () => void;
+  dimmed?: boolean;
 };
 
 const AppCard: React.FC<AppCardProps> = ({
@@ -42,6 +43,7 @@ const AppCard: React.FC<AppCardProps> = ({
   onNativeId,
   onRef,
   onLongPress,
+  dimmed,
 }) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef<TouchableOpacity | null>(null);
@@ -90,7 +92,7 @@ const AppCard: React.FC<AppCardProps> = ({
       onBlur={() => setFocused(false)}
       focusable
       activeOpacity={1}
-      style={styles.card}
+      style={[styles.card, dimmed && styles.cardDimmed]}
     >
       <View style={[styles.logoWrapper, focused && styles.logoWrapperFocused]}>
         {icon ? (
@@ -114,6 +116,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'center',
     overflow: 'visible',
+  },
+  cardDimmed: {
+    opacity: 0.25,
   },
   logoWrapper: {
     width: 140,

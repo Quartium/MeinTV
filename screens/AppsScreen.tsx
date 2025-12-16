@@ -32,6 +32,7 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
   const [selectedPackageName, setSelectedPackageName] = useState<string | null>(null);
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
   const [returnFocusRef, setReturnFocusRef] = useState<TouchableOpacity | null>(null);
+  const [anchorRect, setAnchorRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const cardRefs = useRef<Record<string, TouchableOpacity | null>>({});
 
   const rows = useMemo(() => {
@@ -47,10 +48,22 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
   }, [firstId, onFirstAppNativeIdChange]);
 
   const handleLongPress = (pkg: string, label: string) => {
-    setSelectedPackageName(pkg);
-    setSelectedLabel(label);
-    setReturnFocusRef(cardRefs.current[pkg] ?? null);
-    setMenuVisible(true);
+    const ref = cardRefs.current[pkg];
+    if (ref?.measureInWindow) {
+      ref.measureInWindow((x, y, width, height) => {
+        setAnchorRect({ x, y, width, height });
+        setSelectedPackageName(pkg);
+        setSelectedLabel(label);
+        setReturnFocusRef(ref);
+        setMenuVisible(true);
+      });
+    } else {
+      setAnchorRect(null);
+      setSelectedPackageName(pkg);
+      setSelectedLabel(label);
+      setReturnFocusRef(ref ?? null);
+      setMenuVisible(true);
+    }
   };
 
   const closeMenu = () => setMenuVisible(false);
@@ -69,6 +82,23 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
   const menuItems = useMemo(() => {
     if (!selectedPackageName) return [];
     const items = [];
+    items.push({
+      key: 'open',
+      label: 'Open',
+      iconName: '↗',
+      onPress: () => {
+        if (selectedPackageName) {
+          // Use the same launcher as AppCard so behavior is consistent.
+          const { TvApps } = require('react-native').NativeModules;
+          if (TvApps?.launchApp) {
+            TvApps.launchApp(selectedPackageName).catch((e: any) =>
+              console.warn('launchApp error from context menu', e),
+            );
+          }
+        }
+        closeMenu();
+      },
+    });
     if (!favoritePackages.includes(selectedPackageName)) {
       items.push({
         key: 'favorite',
@@ -148,6 +178,7 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
                     cardRefs.current[item.packageName] = ref;
                   }}
                   onLongPress={() => handleLongPress(item.packageName, item.label)}
+                  dimmed={menuVisible && selectedPackageName !== item.packageName}
                 />
               );
             })}
@@ -160,6 +191,7 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
       <TvContextMenu
         visible={menuVisible}
         anchorLabel={selectedLabel ?? undefined}
+        anchorRect={anchorRect ?? undefined}
         items={menuItems}
         onRequestClose={closeMenu}
         initialFocusIndex={0}

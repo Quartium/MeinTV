@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   BackHandler,
+  Dimensions,
   Modal,
   StyleSheet,
   Text,
@@ -23,6 +24,7 @@ type FocusableRef = { focus?: () => void } | null;
 type TvContextMenuProps = {
   visible: boolean;
   anchorLabel?: string;
+  anchorRect?: { x: number; y: number; width: number; height: number };
   items: MenuItem[];
   onRequestClose: () => void;
   initialFocusIndex?: number;
@@ -33,6 +35,7 @@ type TvContextMenuProps = {
 const TvContextMenu: React.FC<TvContextMenuProps> = ({
   visible,
   anchorLabel,
+  anchorRect,
   items,
   onRequestClose,
   initialFocusIndex = 0,
@@ -45,6 +48,7 @@ const TvContextMenu: React.FC<TvContextMenuProps> = ({
   const openTimestampRef = useRef(0);
   const scrimCloseEnabledRef = useRef(false);
   const scrimEnableTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { width: screenW, height: screenH } = Dimensions.get('window');
 
   const shouldIgnoreInitialPress = () =>
     openTimestampRef.current === 0 || Date.now() - openTimestampRef.current < 700; // guard initial long-press release
@@ -139,6 +143,27 @@ const TvContextMenu: React.FC<TvContextMenuProps> = ({
     [focusedIndex, items.length],
   );
 
+  const cardPositionStyle = useMemo(() => {
+    if (!anchorRect) return {};
+    const cardWidth = Math.min(screenW * 0.3, 420);
+    const spaceRight = screenW - (anchorRect.x + anchorRect.width);
+    const placeOnRight = spaceRight >= cardWidth + 24;
+    const desiredLeft = placeOnRight
+      ? anchorRect.x + anchorRect.width + 12
+      : anchorRect.x - cardWidth - 12;
+    const horizontal = Math.min(Math.max(desiredLeft, 16), screenW - cardWidth - 16);
+    const vertical = Math.min(
+      Math.max(anchorRect.y, 16),
+      screenH - 220,
+    );
+    return {
+      position: 'absolute' as const,
+      left: horizontal,
+      top: vertical,
+      width: cardWidth,
+    };
+  }, [anchorRect, screenH, screenW]);
+
   if (!rendered) {
     return null;
   }
@@ -159,7 +184,7 @@ const TvContextMenu: React.FC<TvContextMenuProps> = ({
       >
         <Animated.View style={[styles.scrim, { opacity }]}>
           <TouchableWithoutFeedback>
-            <View style={styles.card}>
+            <View style={[styles.card, cardPositionStyle]}>
               {items.map((item, index) => {
                 const isFocused = index === activeIndex;
                 return (
@@ -196,7 +221,6 @@ const TvContextMenu: React.FC<TvContextMenuProps> = ({
 const styles = StyleSheet.create({
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,

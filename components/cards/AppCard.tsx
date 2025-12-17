@@ -16,6 +16,7 @@ type AppCardProps = {
   name: string;
   packageName: string;
   icon?: string | null;
+  banner?: string | null;
   scrollToHalf?: () => void;
   isFirst?: boolean;
   isLast?: boolean;
@@ -33,6 +34,7 @@ const AppCard: React.FC<AppCardProps> = ({
   name,
   packageName,
   icon,
+  banner,
   scrollToHalf,
   isFirst,
   isLast,
@@ -94,9 +96,17 @@ const AppCard: React.FC<AppCardProps> = ({
       activeOpacity={1}
       style={[styles.card, dimmed && styles.cardDimmed]}
     >
-      <View style={[styles.logoWrapper, focused && styles.logoWrapperFocused]}>
-        {icon ? (
-          <Image source={{ uri: icon }} style={styles.logo} resizeMode="contain" />
+      <View
+        style={[
+          styles.logoWrapper,
+          focused && styles.logoWrapperFocused,
+          !banner && icon && styles.logoWrapperIcon,
+        ]}
+      >
+        {banner ? (
+          <Image source={{ uri: banner }} style={styles.logo} resizeMode="contain" />
+        ) : icon ? (
+          <Image source={{ uri: icon }} style={styles.icon} resizeMode="contain" />
         ) : (
           <Text style={styles.name}>{name}</Text>
         )}
@@ -134,6 +144,14 @@ const styles = StyleSheet.create({
   logo: {
     width: 140,
     height: 80,
+    borderRadius: 12,
+  },
+  logoWrapperIcon: {
+    backgroundColor: '#2f2f2f',
+  },
+  icon: {
+    width: 60,
+    height: 60,
     borderRadius: 12,
   },
   name: {

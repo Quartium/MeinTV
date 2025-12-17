@@ -48,8 +48,6 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
         map.putString("packageName", pkg)
         map.putString("label", label)
 
-        var iconSet = false
-
         try {
           val bannerResId = appInfo.banner ?: 0
           if (bannerResId != 0) {
@@ -76,42 +74,38 @@ class TvAppsModule(private val reactContext: ReactApplicationContext) :
               bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
               val bytes = stream.toByteArray()
               val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-              // Use banner as the icon image
-              map.putString("icon", "data:image/png;base64,$base64")
-              iconSet = true
+              map.putString("banner", "data:image/png;base64,$base64")
             }
           }
         } catch (_: Exception) {
         }
 
-        if (!iconSet) {
-          try {
-            val iconDrawable = pm.getApplicationIcon(appInfo)
+        try {
+          val iconDrawable = pm.getApplicationIcon(appInfo)
 
-            val bmp: Bitmap? = when (iconDrawable) {
-              is BitmapDrawable -> iconDrawable.bitmap
-              else -> {
-                val w = iconDrawable.intrinsicWidth
-                val h = iconDrawable.intrinsicHeight
-                if (w > 0 && h > 0) {
-                  val outBmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-                  val canvas = Canvas(outBmp)
-                  iconDrawable.setBounds(0, 0, canvas.width, canvas.height)
-                  iconDrawable.draw(canvas)
-                  outBmp
-                } else null
-              }
+          val bmp: Bitmap? = when (iconDrawable) {
+            is BitmapDrawable -> iconDrawable.bitmap
+            else -> {
+              val w = iconDrawable.intrinsicWidth
+              val h = iconDrawable.intrinsicHeight
+              if (w > 0 && h > 0) {
+                val outBmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(outBmp)
+                iconDrawable.setBounds(0, 0, canvas.width, canvas.height)
+                iconDrawable.draw(canvas)
+                outBmp
+              } else null
             }
-
-            bmp?.let {
-              val stream = ByteArrayOutputStream()
-              it.compress(Bitmap.CompressFormat.PNG, 100, stream)
-              val bytes = stream.toByteArray()
-              val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-              map.putString("icon", "data:image/png;base64,$base64")
-            }
-          } catch (_: Exception) {
           }
+
+          bmp?.let {
+            val stream = ByteArrayOutputStream()
+            it.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val bytes = stream.toByteArray()
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            map.putString("icon", "data:image/png;base64,$base64")
+          }
+        } catch (_: Exception) {
         }
 
         result.pushMap(map)

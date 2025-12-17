@@ -45,6 +45,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
   const [popularFirstId, setPopularFirstId] = useState<number | null>(null);
   const [anticipatedFirstId, setAnticipatedFirstId] = useState<number | null>(null);
   const [rowLayouts, setRowLayouts] = useState<{ y: number; height: number }[]>([]);
+  const [focusedRow, setFocusedRow] = useState<number | null>(null);
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
   useEffect(() => {
@@ -134,6 +135,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
   ]);
 
   const handleRowFocus = (rowIndex: number) => {
+    setFocusedRow(rowIndex);
     const layout = rowLayouts[rowIndex];
     if (!layout) return;
     const target =
@@ -154,7 +156,6 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
       });
     };
 
-  const noopFocus = () => {};
   const handlePress = (_index: number, item: PosterItem) => {
     onOpenShowDetails?.(item);
   };
@@ -163,14 +164,11 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
     <View>
       {recs.length > 0 && (
         <>
-          <RowTitle title="Your recommendations" />
+          <RowTitle title="Your recommendations" focused={focusedRow === 0} />
           <View onLayout={onRowLayout(0)}>
             <PosterRow
               items={recs}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(0);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(0)}
               nextFocusUpId={activeTabHandle}
               onFirstItemNativeId={setRecsFirstId}
               nextFocusDownId={upNextFirstId || trendingFirstId || popularFirstId || anticipatedFirstId}
@@ -183,14 +181,11 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
       {upNext.length > 0 && (
         <>
-          <RowTitle title="Up Next" />
+          <RowTitle title="Up Next" focused={focusedRow === 1} />
           <View onLayout={onRowLayout(1)}>
             <PosterRow
               items={upNext}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(1);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(1)}
               nextFocusUpId={recsFirstId || activeTabHandle}
               onFirstItemNativeId={setUpNextFirstId}
               nextFocusDownId={trendingFirstId || popularFirstId || anticipatedFirstId}
@@ -203,14 +198,11 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
       {trending.length > 0 && (
         <>
-          <RowTitle title="Trending shows" />
+          <RowTitle title="Trending shows" focused={focusedRow === 2} />
           <View onLayout={onRowLayout(2)}>
             <PosterRow
               items={trending}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(2);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(2)}
               nextFocusUpId={upNextFirstId || recsFirstId || activeTabHandle}
               onFirstItemNativeId={setTrendingFirstId}
               nextFocusDownId={popularFirstId || anticipatedFirstId}
@@ -223,14 +215,11 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
       {popular.length > 0 && (
         <>
-          <RowTitle title="Most popular" />
+          <RowTitle title="Most popular" focused={focusedRow === 3} />
           <View onLayout={onRowLayout(3)}>
             <PosterRow
               items={popular}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(3);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(3)}
               nextFocusUpId={trendingFirstId || upNextFirstId || recsFirstId || activeTabHandle}
               onFirstItemNativeId={setPopularFirstId}
               nextFocusDownId={anticipatedFirstId}
@@ -243,14 +232,11 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
       {anticipated.length > 0 && (
         <>
-          <RowTitle title="Most anticipated" />
+          <RowTitle title="Most anticipated" focused={focusedRow === 4} />
           <View onLayout={onRowLayout(4)}>
             <PosterRow
               items={anticipated}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(4);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(4)}
               nextFocusUpId={popularFirstId || trendingFirstId || upNextFirstId || recsFirstId || activeTabHandle}
               onFirstItemNativeId={setAnticipatedFirstId}
               onItemPress={handlePress}
@@ -263,22 +249,27 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
   );
 };
 
-function RowTitle({ title }: { title: string }) {
-  return <Text style={styles.rowTitle}>{title}</Text>;
+function RowTitle({ title, focused }: { title: string; focused?: boolean }) {
+  return <Text style={[styles.rowTitle, focused && styles.rowTitleFocused]}>{title}</Text>;
 }
 
 const styles = StyleSheet.create({
   rowTitle: {
     color: 'white',
     fontSize: 16,
-    lineHeight: 19,
-    fontFamily: 'Inter-Medium',
+    lineHeight: 24,
+    fontFamily: 'Inter-Regular',
     marginTop: 24,
-    marginHorizontal: 75,
+    marginHorizontal: 64,
     opacity: 0.7,
   },
+  rowTitleFocused: {
+    fontSize: 20,
+    opacity: 1,
+    fontFamily: 'Inter-Medium',
+  },
   rowSpacer: {
-    height: 32,
+    height: 8,
   },
   footerSpacer: {
     height: 160,

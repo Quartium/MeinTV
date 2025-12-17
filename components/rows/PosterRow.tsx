@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   content: {
-    paddingHorizontal: 75,
+    paddingHorizontal: 64,
   },
 });
 

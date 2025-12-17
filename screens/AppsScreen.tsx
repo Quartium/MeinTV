@@ -203,15 +203,15 @@ const AppsScreen: React.FC<AppsScreenProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 75,
+    paddingHorizontal: 64,
   },
   title: {
     color: 'white',
     fontSize: 16,
-    lineHeight: 19,
-    fontFamily: 'Inter-Medium',
+    lineHeight: 24,
+    fontFamily: 'Inter-Regular',
     marginTop: 24,
-    marginBottom: 12,
+    marginBottom: 8,
     opacity: 0.7,
   },
   row: {

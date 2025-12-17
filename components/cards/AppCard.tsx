@@ -121,7 +121,7 @@ const AppCard: React.FC<AppCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    width: 140,
+    width: 144,
     marginRight: 24,
     marginVertical: 10,
     alignItems: 'center',
@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     opacity: 0.25,
   },
   logoWrapper: {
-    width: 140,
-    height: 80,
+    width: 144,
+    height: 81,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
     transform: [{ scale: FOCUS_SCALE }],
   },
   logo: {
-    width: 140,
-    height: 80,
+    width: 144,
+    height: 81,
     borderRadius: 12,
   },
   logoWrapperIcon: {
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Inter-Regular',
   },
 });

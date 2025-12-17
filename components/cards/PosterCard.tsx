@@ -75,9 +75,9 @@ const PosterCard: React.FC<PosterCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    width: 264,
-    height: 147,
-    marginRight: 24,
+    width: 155,
+    height: 87,
+    marginRight: 20,
     marginVertical: 12,
     borderRadius: 12,
     overflow: 'hidden',

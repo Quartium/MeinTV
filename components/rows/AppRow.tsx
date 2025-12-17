@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     marginBottom: 32
   },
   content: {
-    paddingHorizontal: 75,
+    paddingHorizontal: 64,
   },
 });
 

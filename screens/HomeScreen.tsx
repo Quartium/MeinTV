@@ -71,6 +71,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   const [anchorRect, setAnchorRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [returnFocusRef, setReturnFocusRef] = useState<TouchableOpacity | null>(null);
   const cardRefs = useRef<Record<string, TouchableOpacity | null>>({});
+  const [focusedRow, setFocusedRow] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -111,6 +112,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   }, [recommendedMovies]);
 
   const handleTopPickFocus = (index: number, item: PosterItem) => {
+    setFocusedRow(0);
     scrollToTop();
     setActiveTopPickIndex(index);
 
@@ -217,7 +219,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* SHOW POSTER ROW ONLY IF DATA EXISTS */}
       {topPicks.length > 0 && (
         <>
-          <RowTitle title="Top picks" />
+          <RowTitle title="Top picks" focused={focusedRow === 0} />
 
           <PosterRow
             items={topPicks}
@@ -226,8 +228,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
             nextFocusUpId={activeTabHandle}
             onFirstItemNativeId={onFirstRowNativeIdChange}
           />
-
-          <View style={{ height: 32 }} />
         </>
       )}
 
@@ -240,10 +240,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {apps.length > 0 && (
           <>
-            <RowTitle title="Favorite apps" />
+            <RowTitle title="Favorite apps" focused={focusedRow === 1} />
             <AppRow
               apps={apps}
-              onFocusApp={scrollToHalf}
+              onFocusApp={() => {
+                setFocusedRow(1);
+                scrollToHalf();
+              }}
               onLongPressApp={handleLongPressApp}
               onCardRef={(pkg, ref) => {
                 cardRefs.current[pkg] = ref;
@@ -319,7 +322,7 @@ function HeroOverlay({
 }) {
   return (
     <View style={styles.heroForegroundBox}>
-      <Text style={styles.heroTitle} numberOfLines={1}>{hero.title}</Text>
+      <Text style={styles.heroTitle} numberOfLines={2}>{hero.title}</Text>
 
       <View style={styles.heroSubtitleRow}>
         <Text style={styles.heroSubtitle} numberOfLines={1}>
@@ -343,24 +346,25 @@ function HeroOverlay({
   );
 }
 
-function RowTitle({ title }: { title: string }) {
-  return <Text style={styles.rowTitle}>{title}</Text>;
+function RowTitle({ title, focused }: { title: string; focused?: boolean }) {
+  return <Text style={[styles.rowTitle, focused && styles.rowTitleFocused]}>{title}</Text>;
 }
 
 const styles = StyleSheet.create({
   heroForegroundBox: {
-    marginHorizontal: 75,
-    marginBottom: 0,
-    paddingVertical: 20,
+    marginHorizontal: 64,
+    height: '25%',
     borderRadius: 20,
+    paddingBottom: 16,
+    justifyContent: 'flex-end'
   },
   heroTitle: {
     color: 'white',
-    fontSize: 51,
-    lineHeight: 62,
+    fontSize: 40,
+    lineHeight: 48,
     fontFamily: 'Inter-Regular',
     marginTop: 16,
-    opacity: 0.7,
+    opacity: 0.8,
   },
   heroSubtitleRow: {
     flexDirection: 'row',
@@ -384,23 +388,29 @@ const styles = StyleSheet.create({
   },
   heroSubtitle: {
     color: '#dddddd',
-    fontSize: 21,
-    lineHeight: 25,
+    fontSize: 20,
+    lineHeight: 24,
     fontFamily: 'Inter-Medium',
-    opacity: 0.7,
+    opacity: 0.8,
     flexShrink: 1,
+    marginRight: 16,
   },
   rowTitle: {
     color: 'white',
     fontSize: 16,
-    lineHeight: 19,
-    fontFamily: 'Inter-Medium',
+    lineHeight: 24,
+    fontFamily: 'Inter-Regular',
     marginTop: 24,
-    marginHorizontal: 75,
+    marginHorizontal: 64,
     opacity: 0.7,
   },
+  rowTitleFocused: {
+    fontSize: 20,
+    opacity: 1,
+    fontFamily: 'Inter-Medium',
+  },
   traktBannerWrapper: {
-    marginHorizontal: 75,
+    marginHorizontal: 64,
     overflow: 'visible',
   },
   traktBanner: {

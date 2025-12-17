@@ -32,6 +32,7 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
   const [anticipated, setAnticipated] = useState<PosterItem[]>([]);
   const [rowLayouts, setRowLayouts] = useState<{ y: number; height: number }[]>([]);
   const [firstIds, setFirstIds] = useState<(number | null)[]>([]);
+  const [focusedRow, setFocusedRow] = useState<number | null>(null);
   const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
   useEffect(() => {
@@ -69,7 +70,6 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
     };
   }, []);
 
-  const noopFocus = () => {};
   const handlePress = (_index: number, item: PosterItem) => {
     playInKodiWithElementum({
       id: item.id,
@@ -79,6 +79,7 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
   };
 
   const handleRowFocus = (rowIndex: number) => {
+    setFocusedRow(rowIndex);
     const layout = rowLayouts[rowIndex];
     if (!layout) return;
     const target =
@@ -116,14 +117,11 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
     <View>
       {trending.length > 0 && (
         <>
-          <RowTitle title="Trending movies" />
+          <RowTitle title="Trending movies" focused={focusedRow === 0} />
           <View onLayout={onRowLayout(0)}>
             <PosterRow
               items={trending}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(0);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(0)}
               nextFocusUpId={activeTabHandle}
               onFirstItemNativeId={id => setFirstIdAt(0, id)}
               onItemPress={handlePress}
@@ -136,14 +134,11 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
 
       {popular.length > 0 && (
         <>
-          <RowTitle title="Most popular" />
+          <RowTitle title="Most popular" focused={focusedRow === 1} />
           <View onLayout={onRowLayout(1)}>
             <PosterRow
               items={popular}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(1);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(1)}
               nextFocusUpId={firstIds[0] || activeTabHandle}
               onFirstItemNativeId={id => setFirstIdAt(1, id)}
               nextFocusDownId={firstIds[2] || null}
@@ -156,14 +151,11 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
 
       {anticipated.length > 0 && (
         <>
-          <RowTitle title="Most anticipated" />
+          <RowTitle title="Most anticipated" focused={focusedRow === 2} />
           <View onLayout={onRowLayout(2)}>
             <PosterRow
               items={anticipated}
-              onItemFocus={() => {
-                noopFocus();
-                handleRowFocus(2);
-              }}
+              onItemFocus={(index, _item) => handleRowFocus(2)}
               nextFocusUpId={firstIds[1] || firstIds[0] || activeTabHandle}
               onFirstItemNativeId={id => setFirstIdAt(2, id)}
               onItemPress={handlePress}
@@ -176,22 +168,27 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
   );
 };
 
-function RowTitle({ title }: { title: string }) {
-  return <Text style={styles.rowTitle}>{title}</Text>;
+function RowTitle({ title, focused }: { title: string; focused?: boolean }) {
+  return <Text style={[styles.rowTitle, focused && styles.rowTitleFocused]}>{title}</Text>;
 }
 
 const styles = StyleSheet.create({
   rowTitle: {
     color: 'white',
     fontSize: 16,
-    lineHeight: 19,
-    fontFamily: 'Inter-Medium',
+    lineHeight: 24,
+    fontFamily: 'Inter-Regular',
     marginTop: 24,
-    marginHorizontal: 75,
+    marginHorizontal: 64,
     opacity: 0.7,
   },
+  rowTitleFocused: {
+    fontSize: 20,
+    opacity: 1,
+    fontFamily: 'Inter-Medium',
+  },
   rowSpacer: {
-    height: 32,
+    height: 8,
   },
   footerSpacer: {
     height: 160,

@@ -380,7 +380,7 @@ const ShowDetailsScreen: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 75,
+    paddingHorizontal: 64,
     paddingTop: 16,
     backgroundColor: 'black',
     height: '100%'

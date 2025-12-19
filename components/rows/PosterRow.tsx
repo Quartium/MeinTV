@@ -9,6 +9,7 @@ type PosterRowProps = {
   nextFocusUpId?: number | null;
   nextFocusDownId?: number | null;
   onFirstItemNativeId?: (id: number | null) => void;
+  anchorToStartOnFocus?: boolean;
 };
 
 const PosterRow: React.FC<PosterRowProps> = ({
@@ -18,8 +19,10 @@ const PosterRow: React.FC<PosterRowProps> = ({
   nextFocusUpId,
   nextFocusDownId,
   onFirstItemNativeId,
+  anchorToStartOnFocus = false,
 }) => {
   const listRef = useRef<FlatList | null>(null);
+  const ITEM_TOTAL_WIDTH = 175; // card width + marginRight (155 + 20)
 
   return (
     <View style={styles.wrapper}>
@@ -37,7 +40,16 @@ const PosterRow: React.FC<PosterRowProps> = ({
             isLast={index === items.length - 1}
             nextFocusUpId={nextFocusUpId}
             nextFocusDownId={nextFocusDownId}
-            onFocus={() => onItemFocus(index, item)}
+            onFocus={() => {
+              onItemFocus(index, item);
+              if (anchorToStartOnFocus) {
+                const offset = ITEM_TOTAL_WIDTH * index;
+                listRef.current?.scrollToOffset({
+                  offset,
+                  animated: true,
+                });
+              }
+            }}
             onPress={() => onItemPress?.(index, item)}
             scrollToStart={() =>
               listRef.current?.scrollToOffset({ offset: 0, animated: true })

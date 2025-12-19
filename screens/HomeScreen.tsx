@@ -45,6 +45,7 @@ type HomeScreenProps = {
   showTraktBanner: boolean;
   onConnectTrakt: () => void;
   onRemoveFavorite: (pkg: string) => void;
+  onGoToAppsTab: () => void;
 };
 
 const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -61,6 +62,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   showTraktBanner,
   onConnectTrakt,
   onRemoveFavorite,
+  onGoToAppsTab,
 }) => {
 
   // ❗ Start empty. No fallback local posters.
@@ -227,35 +229,37 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
             onItemPress={handleTopPickPress}
             nextFocusUpId={activeTabHandle}
             onFirstItemNativeId={onFirstRowNativeIdChange}
+            anchorToStartOnFocus
           />
         </>
       )}
 
       <LinearGradient
-        colors={['transparent', '#290708']}
+        colors={['transparent', '#000']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 5 }}
         style={styles.background}
       >
 
-        {apps.length > 0 && (
-          <>
-            <RowTitle title="Favorite apps" focused={focusedRow === 1} />
-            <AppRow
-              apps={apps}
-              onFocusApp={() => {
-                setFocusedRow(1);
-                scrollToHalf();
-              }}
-              onLongPressApp={handleLongPressApp}
-              onCardRef={(pkg, ref) => {
-                cardRefs.current[pkg] = ref;
-              }}
-              dimEnabled={menuVisible}
-              dimExceptPkg={selectedPackageName}
-            />
-          </>
-        )}
+        <>
+          <RowTitle title="Your apps" focused={focusedRow === 1} />
+          <AppRow
+            apps={apps}
+            onFocusApp={() => {
+              setFocusedRow(1);
+              scrollToHalf();
+            }}
+            onLongPressApp={handleLongPressApp}
+            onCardRef={(pkg, ref) => {
+              cardRefs.current[pkg] = ref;
+            }}
+            dimEnabled={menuVisible}
+            dimExceptPkg={selectedPackageName}
+            anchorToStartOnFocus
+            showAddTile
+            onPressAddTile={onGoToAppsTab}
+          />
+        </>
 
         {showTraktBanner && (
           <Animated.View
@@ -353,7 +357,7 @@ function RowTitle({ title, focused }: { title: string; focused?: boolean }) {
 const styles = StyleSheet.create({
   heroForegroundBox: {
     marginHorizontal: 64,
-    height: '25%',
+    height: '30%',
     borderRadius: 20,
     paddingBottom: 16,
     justifyContent: 'flex-end'
@@ -432,7 +436,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Regular',
   },
   background: {
-    borderRadius: 0,
+    borderRadius: 0
   },
 });
 

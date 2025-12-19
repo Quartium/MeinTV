@@ -28,6 +28,7 @@ type AppCardProps = {
   onRef?: (ref: TouchableOpacity | null) => void;
   onLongPress?: () => void;
   dimmed?: boolean;
+  onFocusExtra?: () => void;
 };
 
 const AppCard: React.FC<AppCardProps> = ({
@@ -46,6 +47,7 @@ const AppCard: React.FC<AppCardProps> = ({
   onRef,
   onLongPress,
   dimmed,
+  onFocusExtra,
 }) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef<TouchableOpacity | null>(null);
@@ -90,6 +92,7 @@ const AppCard: React.FC<AppCardProps> = ({
         scrollToHalf?.();
         if (isFirst) scrollToStart?.();
         if (isLast) scrollToEnd?.();
+        onFocusExtra?.();
       }}
       onBlur={() => setFocused(false)}
       focusable

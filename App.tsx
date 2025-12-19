@@ -42,7 +42,7 @@ type TvAppInfo = {
   banner?: string | null;
 };
 
-const HERO_FADE_END = 250;
+const HERO_FADE_END = 190;
 const tabsOrder: TabKey[] = ['forYou', 'movies', 'shows', 'apps'];
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -94,7 +94,7 @@ function App() {
 
   const bgTranslateY = scrollY.interpolate({
     inputRange: [0, HERO_FADE_END * 2],
-    outputRange: [0, -80],
+    outputRange: [0, -120],
     extrapolate: 'clamp',
   });
 
@@ -355,6 +355,7 @@ function App() {
               showTraktBanner={needsTraktAuth}
               onConnectTrakt={startDeviceCode}
               onRemoveFavorite={removeFavorite}
+              onGoToAppsTab={() => handleTabChange('apps')}
             />
           ) : activeTab === 'movies' ? (
                 <MoviesScreen
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   placeholderContainer: {
-    minHeight: 400,
+    minHeight: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },

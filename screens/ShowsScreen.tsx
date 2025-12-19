@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import PosterRow from '../components/rows/PosterRow';
+import UpNextRow from '../components/rows/UpNextRow';
 import {
   getAnticipatedShows,
   getPopularShows,
   getTrendingShows,
   TraktShow,
+  TraktUpNextShow,
 } from '../services/traktClient';
+import { playInKodiWithElementum } from '../services/kodiClient';
 
 type PosterItem = {
   id: string;
@@ -17,11 +20,32 @@ type PosterItem = {
   slug?: string;
 };
 
+type UpNextItem = PosterItem & {
+  episodeCode?: string;
+  episodeTitle?: string;
+  runtimeMinutes?: number;
+  isSeriesPremiere?: boolean;
+  remainingEpisodes?: number;
+  seasonNumber?: number;
+  episodeNumber?: number;
+};
+
+function formatEpisodeCode(season?: number, episode?: number) {
+  if (typeof season !== 'number' || typeof episode !== 'number') return undefined;
+  return `${season}x${String(episode).padStart(2, '0')}`;
+}
+
+function normalizeRuntimeMinutes(runtime?: number) {
+  if (typeof runtime !== 'number') return undefined;
+  if (!Number.isFinite(runtime) || runtime <= 0) return undefined;
+  return Math.round(runtime);
+}
+
 type ShowsScreenProps = {
   activeTabHandle: number | null;
   onFirstRowNativeIdChange: (id: number | null) => void;
   recommendedShows?: TraktShow[];
-  upNextShows?: TraktShow[];
+  upNextShows?: TraktUpNextShow[];
   onRequestScroll: (y: number) => void;
   onOpenShowDetails?: (show: PosterItem) => void;
 };
@@ -38,7 +62,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
   const [popular, setPopular] = useState<PosterItem[]>([]);
   const [anticipated, setAnticipated] = useState<PosterItem[]>([]);
   const [recs, setRecs] = useState<PosterItem[]>([]);
-  const [upNext, setUpNext] = useState<PosterItem[]>([]);
+  const [upNext, setUpNext] = useState<UpNextItem[]>([]);
   const [recsFirstId, setRecsFirstId] = useState<number | null>(null);
   const [upNextFirstId, setUpNextFirstId] = useState<number | null>(null);
   const [trendingFirstId, setTrendingFirstId] = useState<number | null>(null);
@@ -103,14 +127,32 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
   useEffect(() => {
     if (upNextShows && upNextShows.length > 0) {
-      const mapped = upNextShows.map((s, index) => ({
-        id: s.id || `upnext-${index}`,
-        title: s.title,
-        image: s.thumbUrl || s.posterUrl,
-        tmdbId: s.tmdbId,
-        traktId: s.traktId,
-        slug: s.slug,
-      }));
+      const mapped = upNextShows
+        .map((s, index): UpNextItem | null => {
+          const next = s.nextEpisode;
+          if (!next) return null;
+
+          return {
+            id: s.id || `upnext-${index}`,
+            title: s.title,
+            image: s.thumbUrl || s.posterUrl,
+            tmdbId: s.tmdbId,
+            traktId: s.traktId,
+            slug: s.slug,
+            seasonNumber: typeof next.season === 'number' ? next.season : undefined,
+            episodeNumber: typeof next.number === 'number' ? next.number : undefined,
+            episodeCode: formatEpisodeCode(next.season, next.number),
+            episodeTitle: next.title || undefined,
+            runtimeMinutes: normalizeRuntimeMinutes(next.runtime),
+            isSeriesPremiere:
+              typeof next.season === 'number' &&
+              typeof next.number === 'number' &&
+              next.season === 1 &&
+              next.number === 1,
+            remainingEpisodes: s.remainingEpisodes,
+          };
+        })
+        .filter(Boolean) as UpNextItem[];
       setUpNext(mapped);
     } else {
       setUpNext([]);
@@ -119,8 +161,8 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
 
   useEffect(() => {
     const first =
-      recsFirstId ??
       upNextFirstId ??
+      recsFirstId ??
       trendingFirstId ??
       popularFirstId ??
       anticipatedFirstId;
@@ -160,34 +202,53 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
     onOpenShowDetails?.(item);
   };
 
+  const handleUpNextPress = (_index: number, item: UpNextItem) => {
+    const hasEpisode =
+      typeof item.seasonNumber === 'number' &&
+      typeof item.episodeNumber === 'number';
+    if (hasEpisode && typeof item.tmdbId === 'number') {
+      playInKodiWithElementum({
+        type: 'episode',
+        tmdbShowId: item.tmdbId,
+        season: item.seasonNumber as number,
+        episode: item.episodeNumber as number,
+        title: `${item.title} ${item.episodeCode ?? ''}`.trim(),
+        id: item.id,
+      });
+      return;
+    }
+    // Fallback: open details if we can't play directly
+    onOpenShowDetails?.(item);
+  };
+
   return (
     <View>
-      {recs.length > 0 && (
+      {upNext.length > 0 && (
         <>
-          <RowTitle title="Your recommendations" focused={focusedRow === 0} />
+          <RowTitle title="Up Next" focused={focusedRow === 0} />
           <View onLayout={onRowLayout(0)}>
-            <PosterRow
-              items={recs}
+            <UpNextRow
+              items={upNext}
               onItemFocus={(index, _item) => handleRowFocus(0)}
               nextFocusUpId={activeTabHandle}
-              onFirstItemNativeId={setRecsFirstId}
-              nextFocusDownId={upNextFirstId || trendingFirstId || popularFirstId || anticipatedFirstId}
-              onItemPress={handlePress}
+              onFirstItemNativeId={setUpNextFirstId}
+              nextFocusDownId={recsFirstId || trendingFirstId || popularFirstId || anticipatedFirstId}
+              onItemPress={handleUpNextPress}
             />
           </View>
           <View style={styles.rowSpacer} />
         </>
       )}
 
-      {upNext.length > 0 && (
+      {recs.length > 0 && (
         <>
-          <RowTitle title="Up Next" focused={focusedRow === 1} />
+          <RowTitle title="Your recommendations" focused={focusedRow === 1} />
           <View onLayout={onRowLayout(1)}>
             <PosterRow
-              items={upNext}
+              items={recs}
               onItemFocus={(index, _item) => handleRowFocus(1)}
-              nextFocusUpId={recsFirstId || activeTabHandle}
-              onFirstItemNativeId={setUpNextFirstId}
+              nextFocusUpId={upNextFirstId || activeTabHandle}
+              onFirstItemNativeId={setRecsFirstId}
               nextFocusDownId={trendingFirstId || popularFirstId || anticipatedFirstId}
               onItemPress={handlePress}
             />
@@ -203,7 +264,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
             <PosterRow
               items={trending}
               onItemFocus={(index, _item) => handleRowFocus(2)}
-              nextFocusUpId={upNextFirstId || recsFirstId || activeTabHandle}
+              nextFocusUpId={recsFirstId || upNextFirstId || activeTabHandle}
               onFirstItemNativeId={setTrendingFirstId}
               nextFocusDownId={popularFirstId || anticipatedFirstId}
               onItemPress={handlePress}
@@ -220,7 +281,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
             <PosterRow
               items={popular}
               onItemFocus={(index, _item) => handleRowFocus(3)}
-              nextFocusUpId={trendingFirstId || upNextFirstId || recsFirstId || activeTabHandle}
+              nextFocusUpId={trendingFirstId || recsFirstId || upNextFirstId || activeTabHandle}
               onFirstItemNativeId={setPopularFirstId}
               nextFocusDownId={anticipatedFirstId}
               onItemPress={handlePress}
@@ -237,7 +298,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
             <PosterRow
               items={anticipated}
               onItemFocus={(index, _item) => handleRowFocus(4)}
-              nextFocusUpId={popularFirstId || trendingFirstId || upNextFirstId || recsFirstId || activeTabHandle}
+              nextFocusUpId={popularFirstId || trendingFirstId || recsFirstId || upNextFirstId || activeTabHandle}
               onFirstItemNativeId={setAnticipatedFirstId}
               onItemPress={handlePress}
             />

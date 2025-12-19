@@ -25,7 +25,14 @@ import {
   loadStoredToken,
   isTokenValid,
 } from './services/traktAuth';
-import { getRecommendedMovies, getRecommendedShows, getUpNextShows, TraktMovie, TraktShow } from './services/traktClient';
+import {
+  getRecommendedMovies,
+  getRecommendedShows,
+  getUpNextShows,
+  TraktMovie,
+  TraktShow,
+  TraktUpNextShow,
+} from './services/traktClient';
 
 const { TvApps } = NativeModules;
 
@@ -76,7 +83,7 @@ function App() {
   const [traktToken, setTraktToken] = useState<any>(null);
   const [recommendations, setRecommendations] = useState<TraktMovie[]>([]);
   const [recommendedShows, setRecommendedShows] = useState<TraktShow[]>([]);
-  const [upNextShows, setUpNextShows] = useState<TraktShow[]>([]);
+  const [upNextShows, setUpNextShows] = useState<TraktUpNextShow[]>([]);
   const [needsTraktAuth, setNeedsTraktAuth] = useState(false);
 
   const scrollY = useRef(new Animated.Value(0)).current;

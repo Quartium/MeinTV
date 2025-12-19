@@ -51,6 +51,16 @@ export type TraktSeason = {
   episodes: TraktEpisode[];
 };
 
+export type TraktUpNextShow = TraktShow & {
+  nextEpisode?: {
+    season?: number;
+    number?: number;
+    title?: string;
+    runtime?: number;
+  };
+  remainingEpisodes?: number;
+};
+
 type TraktMovieEntity = TraktMediaEntity;
 type TraktShowEntity = TraktMediaEntity;
 
@@ -272,7 +282,7 @@ export async function getRecommendedShows(
 export async function getUpNextShows(
   authToken: string,
   limit = 10,
-): Promise<TraktShow[]> {
+): Promise<TraktUpNextShow[]> {
   const data = await traktRequest<any[]>(
     '/sync/watched/shows',
     {
@@ -282,10 +292,68 @@ export async function getUpNextShows(
     authToken,
   );
   if (!Array.isArray(data)) return [];
-  return data
-    .map(item => (item && item.show ? item.show : null))
+
+  const shows = data
+    .map(item => (item && item.show ? (item.show as TraktMediaEntity) : null))
     .filter(Boolean)
-    .map((s: any) => mapMediaEntity(s as TraktMediaEntity));
+    .slice(0, limit);
+
+  const enriched = await Promise.all(
+    shows.map(async (rawShow): Promise<TraktUpNextShow | null> => {
+      const mapped = mapMediaEntity(rawShow as TraktMediaEntity);
+      const showKey = encodeURIComponent(
+        String(
+          rawShow?.ids?.slug ??
+            rawShow?.ids?.trakt ??
+            rawShow?.ids?.tmdb ??
+            mapped.id,
+        ),
+      );
+
+      try {
+        const progress = await traktRequest<any>(
+          `/shows/${showKey}/progress/watched`,
+          {
+            hidden: false,
+            specials: false,
+            extended: 'full',
+          },
+          authToken,
+        );
+
+        const aired = typeof progress?.aired === 'number' ? progress.aired : undefined;
+        const completed =
+          typeof progress?.completed === 'number' ? progress.completed : undefined;
+        const remaining =
+          aired !== undefined && completed !== undefined
+            ? Math.max(aired - completed, 0)
+            : undefined;
+
+        const next = progress?.next_episode;
+
+        if (!next) {
+          // No upcoming episode, skip this show from "Up Next"
+          return null;
+        }
+
+        return {
+          ...mapped,
+          nextEpisode: {
+            season: typeof next.season === 'number' ? next.season : undefined,
+            number: typeof next.number === 'number' ? next.number : undefined,
+            title: next.title || '',
+            runtime: typeof next.runtime === 'number' ? next.runtime : undefined,
+          },
+          remainingEpisodes: remaining,
+        };
+      } catch (e) {
+        console.warn('Failed to load next episode for show', showKey, e);
+        return null;
+      }
+    }),
+  );
+
+  return enriched.filter(Boolean) as TraktUpNextShow[];
 }
 
 export async function getShowSeasons(

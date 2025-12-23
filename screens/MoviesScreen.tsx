@@ -126,6 +126,7 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
               onFirstItemNativeId={id => setFirstIdAt(0, id)}
               onItemPress={handlePress}
               nextFocusDownId={firstIds[1] || firstIds[2] || null}
+              showTitle
             />
           </View>
           <View style={styles.rowSpacer} />
@@ -143,6 +144,7 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
               onFirstItemNativeId={id => setFirstIdAt(1, id)}
               nextFocusDownId={firstIds[2] || null}
               onItemPress={handlePress}
+              showTitle
             />
           </View>
           <View style={styles.rowSpacer} />
@@ -159,6 +161,7 @@ const MoviesScreen: React.FC<MoviesScreenProps> = ({
               nextFocusUpId={firstIds[1] || firstIds[0] || activeTabHandle}
               onFirstItemNativeId={id => setFirstIdAt(2, id)}
               onItemPress={handlePress}
+              showTitle
             />
           </View>
           <View style={styles.footerSpacer} />

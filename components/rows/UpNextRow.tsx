@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import UpNextCard from '../cards/UpNextCard';
+import PosterCard from '../cards/PosterCard';
 
 type UpNextRowItem = {
   id: string;
@@ -49,7 +49,7 @@ const UpNextRow: React.FC<UpNextRowProps> = ({
         contentContainerStyle={styles.content}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <UpNextCard
+          <PosterCard
             title={item.title}
             image={item.image}
             episodeCode={item.episodeCode}
@@ -57,6 +57,7 @@ const UpNextRow: React.FC<UpNextRowProps> = ({
             runtimeMinutes={item.runtimeMinutes}
             isSeriesPremiere={item.isSeriesPremiere}
             remainingEpisodes={item.remainingEpisodes}
+            showTitle
             isFirst={index === 0}
             isLast={index === items.length - 1}
             nextFocusUpId={nextFocusUpId}

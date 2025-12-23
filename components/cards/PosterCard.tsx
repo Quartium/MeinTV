@@ -3,7 +3,9 @@ import {
   Image,
   Platform,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
   findNodeHandle,
 } from 'react-native';
 
@@ -11,6 +13,13 @@ const FOCUS_SCALE = 1.09;
 
 type PosterCardProps = {
   image: string;
+  title?: string;
+  episodeCode?: string;
+  episodeTitle?: string;
+  runtimeMinutes?: number;
+  isSeriesPremiere?: boolean;
+  remainingEpisodes?: number;
+  showTitle?: boolean;
   onFocus?: () => void;
   onPress?: () => void;
   isFirst?: boolean;
@@ -22,8 +31,25 @@ type PosterCardProps = {
   onNativeId?: (id: number | null) => void;
 };
 
+function Badge({ label }: { label: string }) {
+  return (
+    <View style={styles.badge}>
+      <Text numberOfLines={1} style={styles.badgeText}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
 const PosterCard: React.FC<PosterCardProps> = ({
   image,
+  title,
+  episodeCode,
+  episodeTitle,
+  runtimeMinutes,
+  isSeriesPremiere,
+  remainingEpisodes,
+  showTitle = false,
   onFocus,
   onPress,
   isFirst,
@@ -52,23 +78,58 @@ const PosterCard: React.FC<PosterCardProps> = ({
     if (nextFocusDownId) focusProps.nextFocusDown = nextFocusDownId;
   }
 
+  const showTitleText = showTitle && !!title;
+  const showEpisodeInfo = showTitleText && (episodeCode || episodeTitle);
+  const showBadges =
+    isSeriesPremiere ||
+    (typeof runtimeMinutes === 'number' && runtimeMinutes > 0) ||
+    (typeof remainingEpisodes === 'number' && remainingEpisodes > 0);
+
   return (
     <TouchableOpacity
       ref={ref}
       {...focusProps}
+      focusable
+      activeOpacity={1}
       onPress={onPress}
       onFocus={() => {
         setFocused(true);
         if (isFirst) scrollToStart();
         if (isLast) scrollToEnd();
-        onFocus && onFocus();
+        onFocus?.();
       }}
       onBlur={() => setFocused(false)}
-      focusable
-      activeOpacity={1}
-      style={[styles.card, focused && styles.cardFocused]}
+      style={styles.card}
     >
-      <Image source={{ uri: image }} style={styles.image} />
+      <View style={[styles.imageWrapper, focused && styles.imageWrapperFocused]}>
+        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+
+        {showBadges && (
+          <View style={styles.badgesRow}>
+            {isSeriesPremiere && <Badge label="Series premiere" />}
+            {typeof runtimeMinutes === 'number' && runtimeMinutes > 0 && (
+              <Badge label={`${runtimeMinutes}m`} />
+            )}
+            {typeof remainingEpisodes === 'number' && remainingEpisodes > 0 && (
+              <Badge label={`${remainingEpisodes} left`} />
+            )}
+          </View>
+        )}
+      </View>
+
+      {showTitleText && (
+        <View style={styles.textWrapper}>
+          <Text numberOfLines={1} style={styles.title}>
+            {title}
+          </Text>
+          {showEpisodeInfo && (
+            <Text numberOfLines={1} style={styles.subtitle}>
+              {episodeCode}
+              {episodeTitle ? ` • ${episodeTitle}` : ''}
+            </Text>
+          )}
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -76,26 +137,64 @@ const PosterCard: React.FC<PosterCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     width: 155,
-    height: 87,
     marginRight: 20,
     marginVertical: 12,
+    overflow: 'visible',
+  },
+  imageWrapper: {
+    width: 155,
+    height: 87,
     borderRadius: 12,
     overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'transparent',
   },
-  cardFocused: {
+  imageWrapperFocused: {
     transform: [{ scale: FOCUS_SCALE }],
-    borderColor: '#B5C9CF',
-    shadowColor: '#B2C5CD',
+    borderColor: '#b5c9cf',
+    shadowColor: '#b2c5cd',
     elevation: 3,
   },
   image: {
     width: '100%',
     height: '100%',
     backgroundColor: '#333',
+  },
+  badgesRow: {
+    position: 'absolute',
+    bottom: 4,
+    left: 4,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  badge: {
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  badgeText: {
+    color: '#f3f6f7',
+    fontSize: 11,
+    fontFamily: 'Inter-Medium',
+  },
+  textWrapper: {
+    marginTop: 10,
+  },
+  title: {
+    color: 'white',
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: 'Inter-Medium',
+  },
+  subtitle: {
+    color: '#cfd6d9',
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: 'Inter-Regular',
+    marginTop: 4,
   },
 });
 

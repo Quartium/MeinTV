@@ -10,6 +10,7 @@ type PosterRowProps = {
   nextFocusDownId?: number | null;
   onFirstItemNativeId?: (id: number | null) => void;
   anchorToStartOnFocus?: boolean;
+  showTitle?: boolean;
 };
 
 const PosterRow: React.FC<PosterRowProps> = ({
@@ -20,6 +21,7 @@ const PosterRow: React.FC<PosterRowProps> = ({
   nextFocusDownId,
   onFirstItemNativeId,
   anchorToStartOnFocus = false,
+  showTitle = false,
 }) => {
   const listRef = useRef<FlatList | null>(null);
   const ITEM_TOTAL_WIDTH = 175; // card width + marginRight (155 + 20)
@@ -36,6 +38,8 @@ const PosterRow: React.FC<PosterRowProps> = ({
         renderItem={({ item, index }) => (
           <PosterCard
             image={item.image}
+            title={item.title}
+            showTitle={showTitle}
             isFirst={index === 0}
             isLast={index === items.length - 1}
             nextFocusUpId={nextFocusUpId}

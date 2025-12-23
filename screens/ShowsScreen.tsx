@@ -251,6 +251,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
               onFirstItemNativeId={setRecsFirstId}
               nextFocusDownId={trendingFirstId || popularFirstId || anticipatedFirstId}
               onItemPress={handlePress}
+              showTitle
             />
           </View>
           <View style={styles.rowSpacer} />
@@ -268,6 +269,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
               onFirstItemNativeId={setTrendingFirstId}
               nextFocusDownId={popularFirstId || anticipatedFirstId}
               onItemPress={handlePress}
+              showTitle
             />
           </View>
           <View style={styles.rowSpacer} />
@@ -285,6 +287,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
               onFirstItemNativeId={setPopularFirstId}
               nextFocusDownId={anticipatedFirstId}
               onItemPress={handlePress}
+              showTitle
             />
           </View>
           <View style={styles.rowSpacer} />
@@ -301,6 +304,7 @@ const ShowsScreen: React.FC<ShowsScreenProps> = ({
               nextFocusUpId={popularFirstId || trendingFirstId || recsFirstId || upNextFirstId || activeTabHandle}
               onFirstItemNativeId={setAnticipatedFirstId}
               onItemPress={handlePress}
+              showTitle
             />
           </View>
           <View style={styles.footerSpacer} />
